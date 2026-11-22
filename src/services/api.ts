@@ -277,10 +277,28 @@ export async function getPaperSummary(paperId: string): Promise<PaperSummary> {
         };
       }
     } catch (e) {
-      console.warn('Backend summary failed, fallback to mock', e);
+      console.warn('Backend summary request error', e);
     }
   }
-  return MOCK_SUMMARIES[paperId] || MOCK_SUMMARIES['paper-1'];
+  return {
+    paperId,
+    title: 'Summary Pending',
+    filename: 'document.pdf',
+    authors: 'Document Authors',
+    pages: 1,
+    fileSize: 'PDF',
+    abstractOverview: 'Click "Generate Summary" above to synthesize an AI brief for this document.',
+    researchObjectives: 'Click "Generate Summary" to extract objectives.',
+    problemStatement: 'Click "Generate Summary" to extract problem statement.',
+    methodology: 'Click "Generate Summary" to extract methodology.',
+    keyFindings: ['Click "Generate Summary" to extract key findings.'],
+    resultsAndDiscussion: 'Click "Generate Summary" to extract results.',
+    limitations: 'Click "Generate Summary" to extract limitations.',
+    conclusion: 'Click "Generate Summary" to extract conclusion.',
+    keywords: ['AI Brief', 'Analysis'],
+    keyInsights: [],
+    sourceReferences: [],
+  };
 }
 
 // Comparison API

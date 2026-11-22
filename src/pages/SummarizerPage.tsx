@@ -17,15 +17,21 @@ export const SummarizerPage: React.FC = () => {
 
   useEffect(() => {
     if (selectedPaperId) {
-      getPaperSummary(selectedPaperId).then(data => {
-        setSummary(data);
-      });
+      setIsGenerating(true);
+      getPaperSummary(selectedPaperId)
+        .then(data => {
+          setSummary(data);
+        })
+        .finally(() => {
+          setIsGenerating(false);
+        });
     }
   }, [selectedPaperId]);
 
   const handleGenerate = () => {
+    if (!selectedPaperId) return;
     setIsGenerating(true);
-    showToast('Synthesizing academic brief...', 'info');
+    showToast('Synthesizing academic brief with Gemini...', 'info');
     getPaperSummary(selectedPaperId)
       .then(data => {
         setSummary(data);
