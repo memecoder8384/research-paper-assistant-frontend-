@@ -5,14 +5,22 @@ import { getPaperSummary } from '../services/api';
 
 export const SummarizerPage: React.FC = () => {
   const { papers, showToast } = useWorkspace();
-  const [selectedPaperId, setSelectedPaperId] = useState<string>('paper-1');
+  const [selectedPaperId, setSelectedPaperId] = useState<string>('');
   const [summary, setSummary] = useState<PaperSummary | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
-    getPaperSummary(selectedPaperId).then(data => {
-      setSummary(data);
-    });
+    if (papers.length > 0 && (!selectedPaperId || !papers.some(p => p.id === selectedPaperId))) {
+      setSelectedPaperId(papers[0].id);
+    }
+  }, [papers]);
+
+  useEffect(() => {
+    if (selectedPaperId) {
+      getPaperSummary(selectedPaperId).then(data => {
+        setSummary(data);
+      });
+    }
   }, [selectedPaperId]);
 
   const handleGenerate = () => {

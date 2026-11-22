@@ -10,19 +10,24 @@ export const GapAnalyzerPage: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [filterTag, setFilterTag] = useState<string>('All');
   const [showCorpusEditor, setShowCorpusEditor] = useState(false);
-  const [selectedCorpusIds, setSelectedCorpusIds] = useState<string[]>([
-    'paper-1',
-    'paper-2',
-    'paper-4',
-    'paper-3',
-  ]);
+  const [selectedCorpusIds, setSelectedCorpusIds] = useState<string[]>([]);
 
   useEffect(() => {
-    getResearchGaps().then(data => {
+    if (papers.length > 0) {
+      const validIds = papers.map(p => p.id);
+      setSelectedCorpusIds(prev => {
+        const filtered = prev.filter(id => validIds.includes(id));
+        return filtered.length > 0 ? filtered : validIds.slice(0, 5);
+      });
+    }
+  }, [papers]);
+
+  useEffect(() => {
+    getResearchGaps(selectedCorpusIds.length > 0 ? selectedCorpusIds : undefined).then(data => {
       setGaps(data.gaps);
       setThematic(data.thematic);
     });
-  }, []);
+  }, [selectedCorpusIds]);
 
   const handleAnalyze = () => {
     setIsAnalyzing(true);

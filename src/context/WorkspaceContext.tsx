@@ -34,13 +34,9 @@ interface WorkspaceContextType {
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined);
 
 export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [papers, setPapers] = useState<ResearchPaper[]>(INITIAL_PAPERS);
+  const [papers, setPapers] = useState<ResearchPaper[]>([]);
   const [stats, setStats] = useState<WorkspaceStats>(MOCK_WORKSPACE_STATS);
-  const [selectedPapersForChat, setSelectedPapersForChat] = useState<string[]>([
-    'paper-1',
-    'paper-2',
-    'paper-4'
-  ]);
+  const [selectedPapersForChat, setSelectedPapersForChat] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -56,6 +52,24 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       getPapers().then(data => {
         if (data && data.length) {
           setPapers(data);
+          setSelectedPapersForChat(data.map(p => p.id).slice(0, 3));
+          setStats(prev => ({
+            ...prev,
+            totalPapers: data.length,
+            indexedCount: data.filter(p => p.status === 'indexed').length,
+            processingCount: data.filter(p => p.status === 'processing').length,
+            failedCount: data.filter(p => p.status === 'failed').length,
+          }));
+        } else if (res.success) {
+          setPapers([]);
+          setSelectedPapersForChat([]);
+          setStats(prev => ({
+            ...prev,
+            totalPapers: 0,
+            indexedCount: 0,
+            processingCount: 0,
+            failedCount: 0,
+          }));
         }
       });
     });

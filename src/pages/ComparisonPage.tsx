@@ -5,17 +5,34 @@ import { getComparisonData } from '../services/api';
 
 export const ComparisonPage: React.FC = () => {
   const { papers, showToast } = useWorkspace();
-  const [paperAId, setPaperAId] = useState<string>('paper-2'); // Attention Is All You Need
-  const [paperBId, setPaperBId] = useState<string>('paper-1'); // RAG
+  const [paperAId, setPaperAId] = useState<string>('');
+  const [paperBId, setPaperBId] = useState<string>('');
   const [paperCId, setPaperCId] = useState<string | null>(null);
   const [comparison, setComparison] = useState<ComparisonData | null>(null);
   const [isComparing, setIsComparing] = useState(false);
   const [selectingSlot, setSelectingSlot] = useState<'A' | 'B' | 'C' | null>(null);
 
   useEffect(() => {
-    getComparisonData(paperAId, paperBId).then(data => {
-      setComparison(data);
-    });
+    if (papers.length >= 2) {
+      if (!paperAId || !papers.some(p => p.id === paperAId)) {
+        setPaperAId(papers[0].id);
+      }
+      if (!paperBId || !papers.some(p => p.id === paperBId)) {
+        setPaperBId(papers[1].id);
+      }
+    } else if (papers.length === 1) {
+      if (!paperAId || !papers.some(p => p.id === paperAId)) {
+        setPaperAId(papers[0].id);
+      }
+    }
+  }, [papers]);
+
+  useEffect(() => {
+    if (paperAId && paperBId) {
+      getComparisonData(paperAId, paperBId).then(data => {
+        setComparison(data);
+      });
+    }
   }, [paperAId, paperBId]);
 
   const handleRunComparison = () => {

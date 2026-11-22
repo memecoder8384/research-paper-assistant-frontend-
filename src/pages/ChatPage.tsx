@@ -5,39 +5,7 @@ import { sendChatMessage } from '../services/api';
 
 export const ChatPage: React.FC = () => {
   const { papers, selectedPapersForChat, togglePaperSelectionForChat, showToast } = useWorkspace();
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'msg-initial-1',
-      sender: 'user',
-      content: 'How does RAG-Token differ from RAG-Sequence in Lewis et al. (2020), and what trade-offs were observed on open-domain QA?',
-      timestamp: '10:42 AM',
-    },
-    {
-      id: 'msg-initial-2',
-      sender: 'assistant',
-      content: `### Marginalization Granularity: Sequence vs. Token\n\nLewis et al. (2020) introduce two formulations that differ in how they marginalize over the top-K retrieved Wikipedia passages during generation:\n\n- **RAG-Sequence:** Conditions the entire generated output sequence on the same single retrieved document, marginalizing at the sequence level via beam search.\n- **RAG-Token:** Allows each target token to attend to a different retrieved passage, enabling the generator to synthesize facts across multiple documents within one answer.`,
-      timestamp: '10:42 AM',
-      citations: [
-        {
-          id: 'cite-1',
-          paperId: 'paper-1',
-          paperTitle: 'Lewis et al. (2020) — RAG',
-          authorsYear: 'Lewis et al. (2020) — RAG',
-          page: 'p. 3',
-          quote: '"RAG-Token model can predict each target token based on a different document, combining information across several passages."',
-        },
-        {
-          id: 'cite-2',
-          paperId: 'paper-1',
-          paperTitle: 'Lewis et al. (2020) — RAG',
-          authorsYear: 'Lewis et al. (2020) — RAG',
-          page: 'p. 6',
-          quote: '"RAG-Sequence outperforms RAG-Token on Jeopardy question generation, while RAG-Token achieves higher diversity on MS-MARCO."',
-        },
-      ],
-      groundedPapers: ['paper-1'],
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPaperPicker, setShowPaperPicker] = useState(false);

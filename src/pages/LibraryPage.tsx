@@ -232,7 +232,14 @@ export const LibraryPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant">
-                {filteredPapers.map(paper => (
+                {filteredPapers.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-gutter-md py-12 text-center text-on-surface-variant font-body">
+                      No research papers found. Click "Upload Paper" above to upload your first academic PDF.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredPapers.map(paper => (
                   <tr key={paper.id} className="hover:bg-surface-container-low transition-colors duration-state-change group">
                     <td className="px-gutter-md py-3.5">
                       <div className="flex items-center gap-gutter-sm">
@@ -334,7 +341,8 @@ export const LibraryPage: React.FC = () => {
                       )}
                     </td>
                   </tr>
-                ))}
+                )))
+              }
               </tbody>
             </table>
           </div>
