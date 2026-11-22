@@ -19,6 +19,7 @@ interface WorkspaceContextType {
   toasts: ToastInfo[];
   backendConnected: boolean;
   isProcessing: boolean;
+  isLoadingPapers: boolean;
   setIsProcessing: (loading: boolean) => void;
   setSearchQuery: (q: string) => void;
   setIsSearchModalOpen: (open: boolean) => void;
@@ -45,6 +46,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [toasts, setToasts] = useState<ToastInfo[]>([]);
   const [backendConnected, setBackendConnected] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoadingPapers, setIsLoadingPapers] = useState(true);
 
   useEffect(() => {
     testBackendConnection().then(res => {
@@ -52,29 +54,33 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       if (res.success) {
         API_CONFIG.useMockApi = false;
       }
-      getPapers().then(data => {
-        if (data && data.length) {
-          setPapers(data);
-          setSelectedPapersForChat(data.map(p => p.id).slice(0, 3));
-          setStats(prev => ({
-            ...prev,
-            totalPapers: data.length,
-            indexedCount: data.filter(p => p.status === 'indexed').length,
-            processingCount: data.filter(p => p.status === 'processing').length,
-            failedCount: data.filter(p => p.status === 'failed').length,
-          }));
-        } else if (res.success) {
-          setPapers([]);
-          setSelectedPapersForChat([]);
-          setStats(prev => ({
-            ...prev,
-            totalPapers: 0,
-            indexedCount: 0,
-            processingCount: 0,
-            failedCount: 0,
-          }));
-        }
-      });
+      getPapers()
+        .then(data => {
+          if (data && data.length) {
+            setPapers(data);
+            setSelectedPapersForChat(data.map(p => p.id).slice(0, 3));
+            setStats(prev => ({
+              ...prev,
+              totalPapers: data.length,
+              indexedCount: data.filter(p => p.status === 'indexed').length,
+              processingCount: data.filter(p => p.status === 'processing').length,
+              failedCount: data.filter(p => p.status === 'failed').length,
+            }));
+          } else if (res.success) {
+            setPapers([]);
+            setSelectedPapersForChat([]);
+            setStats(prev => ({
+              ...prev,
+              totalPapers: 0,
+              indexedCount: 0,
+              processingCount: 0,
+              failedCount: 0,
+            }));
+          }
+        })
+        .finally(() => {
+          setIsLoadingPapers(false);
+        });
     });
   }, []);
 
@@ -149,6 +155,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         toasts,
         backendConnected,
         isProcessing,
+        isLoadingPapers,
         setIsProcessing,
         setSearchQuery,
         setIsSearchModalOpen,

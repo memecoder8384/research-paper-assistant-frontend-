@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
 import { ChatMessage } from '../types';
 import { sendChatMessage } from '../services/api';
+import { Skeleton, SkeletonText } from '../components/common/Skeleton';
 
 export const ChatPage: React.FC = () => {
   const {
@@ -330,17 +331,28 @@ export const ChatPage: React.FC = () => {
 
           {/* Assistant Loading State */}
           {isLoading && (
-            <article className="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md shadow-sm">
-              <div className="flex items-center gap-gutter-sm">
-                <span className="w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center animate-spin">
-                  <span className="material-symbols-outlined text-[14px]">sync</span>
-                </span>
-                <span className="font-label text-label-md text-on-surface">Searching vector indices &amp; grounding claims...</span>
+            <article className="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md shadow-sm animate-in fade-in duration-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-gutter-sm">
+                  <span className="w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center animate-spin shadow-2xs">
+                    <span className="material-symbols-outlined text-[14px]">sync</span>
+                  </span>
+                  <span className="font-label text-label-md text-on-surface">Searching vector indices &amp; grounding claims...</span>
+                </div>
+                <Skeleton className="w-24 h-5 rounded-full" />
               </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-surface-container-low rounded w-3/4 animate-pulse"></div>
-                <div className="h-4 bg-surface-container-low rounded w-5/6 animate-pulse"></div>
-                <div className="h-4 bg-surface-container-low rounded w-1/2 animate-pulse"></div>
+
+              <div className="flex flex-col gap-2.5 max-w-prose">
+                <SkeletonText lines={4} />
+                <div className="pt-2">
+                  <SkeletonText lines={3} />
+                </div>
+              </div>
+
+              {/* Citations Retrieval Skeleton */}
+              <div className="pt-2 border-t border-outline-variant/60 flex items-center gap-2">
+                <Skeleton className="w-28 h-6 rounded" />
+                <Skeleton className="w-20 h-6 rounded" />
               </div>
             </article>
           )}

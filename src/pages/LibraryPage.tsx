@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
+import { LibraryTableSkeleton } from '../components/common/Skeleton';
 
 export const LibraryPage: React.FC = () => {
-  const { papers, setIsUploadModalOpen, retryPaperIndexing, deletePaper, showToast, isProcessing } = useWorkspace();
+  const {
+    papers,
+    setIsUploadModalOpen,
+    retryPaperIndexing,
+    deletePaper,
+    showToast,
+    isProcessing,
+    isLoadingPapers,
+  } = useWorkspace();
   const [activeTab, setActiveTab] = useState<'documents' | 'loading' | 'empty'>('documents');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -207,8 +216,12 @@ export const LibraryPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Main Panel Content depending on activeTab */}
-      {activeTab === 'documents' && (
+      {/* Main Panel Content depending on activeTab or loading state */}
+      {isLoadingPapers || activeTab === 'loading' ? (
+        <section className="flex flex-col gap-gutter-md">
+          <LibraryTableSkeleton rows={6} />
+        </section>
+      ) : activeTab === 'documents' ? (
         <section className="flex flex-col gap-gutter-md">
           {/* Error Notification Banner for Failed Paper (if any) */}
           {failedPaper && (
@@ -360,22 +373,7 @@ export const LibraryPage: React.FC = () => {
             </table>
           </div>
         </section>
-      )}
-
-      {/* Loading State Panel */}
-      {activeTab === 'loading' && (
-        <section className="bg-surface border border-outline-variant rounded-md p-gutter-xl flex flex-col items-center justify-center gap-gutter-md text-center py-16">
-          <span className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center animate-spin">
-            <span className="material-symbols-outlined text-[22px]" aria-hidden="true">sync</span>
-          </span>
-          <div className="flex flex-col gap-gutter-xs">
-            <h2 className="font-headline text-headline-sm text-on-surface">Loading research library...</h2>
-            <p className="font-body text-body-sm text-on-surface-variant">
-              Fetching indexed documents and vector embeddings from your workspace.
-            </p>
-          </div>
-        </section>
-      )}
+      ) : null}
 
       {/* Empty State Panel */}
       {activeTab === 'empty' && (

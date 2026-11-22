@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
 import { ComparisonData } from '../types';
 import { getComparisonData } from '../services/api';
+import { ComparisonSkeleton } from '../components/common/Skeleton';
 
 export const ComparisonPage: React.FC = () => {
   const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
@@ -205,8 +206,10 @@ export const ComparisonPage: React.FC = () => {
         </div>
       )}
 
-      {/* AI-Generated Comparison Overview */}
-      {comparison && (
+      {/* AI-Generated Comparison Overview or Skeleton Loader */}
+      {busy ? (
+        <ComparisonSkeleton />
+      ) : comparison ? (
         <>
           <section className="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md shadow-sm">
             <div className="flex items-center gap-gutter-sm">
@@ -280,7 +283,7 @@ export const ComparisonPage: React.FC = () => {
             </table>
           </section>
         </>
-      )}
+      ) : null}
     </main>
   );
 };

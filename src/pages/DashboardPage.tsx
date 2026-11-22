@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useWorkspace } from '../context/WorkspaceContext';
+import { DashboardSkeleton } from '../components/common/Skeleton';
 
 export const DashboardPage: React.FC = () => {
-  const { papers, stats, setIsUploadModalOpen, backendConnected, isProcessing } = useWorkspace();
+  const { papers, stats, setIsUploadModalOpen, backendConnected, isProcessing, isLoadingPapers } = useWorkspace();
   const navigate = useNavigate();
 
   const recentPapers = papers.slice(0, 4);
@@ -49,7 +50,11 @@ export const DashboardPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Statistics Section (4 Metric Cards) */}
+      {isLoadingPapers ? (
+        <DashboardSkeleton />
+      ) : (
+        <>
+          {/* Statistics Section (4 Metric Cards) */}
       <section aria-label="Workspace metrics" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter-md items-stretch">
         {/* Metric 1 */}
         <article className="h-full bg-surface border border-outline-variant rounded-md p-gutter-lg shadow-sm flex flex-col justify-between gap-gutter-sm hover:border-primary/40 transition-colors">
@@ -304,6 +309,8 @@ export const DashboardPage: React.FC = () => {
           </div>
         </section>
       </div>
+      </>
+      )}
     </main>
   );
 };

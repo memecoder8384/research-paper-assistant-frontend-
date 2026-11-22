@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
 import { ResearchGap, ThematicCoverage } from '../types';
 import { getResearchGaps } from '../services/api';
+import { GapAnalysisSkeleton } from '../components/common/Skeleton';
 
 export const GapAnalyzerPage: React.FC = () => {
   const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
@@ -143,8 +144,12 @@ export const GapAnalyzerPage: React.FC = () => {
         </div>
       )}
 
-      {/* Thematic Coverage & Synthesis Overview */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-gutter-lg items-stretch">
+      {/* Thematic Coverage & Synthesis Overview or Skeleton Loader */}
+      {busy || gaps.length === 0 ? (
+        <GapAnalysisSkeleton />
+      ) : (
+        <>
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-gutter-lg items-stretch">
         {/* Identified Research Themes Chart */}
         <article className="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md shadow-sm">
           <div className="flex items-center justify-between">
@@ -267,6 +272,8 @@ export const GapAnalyzerPage: React.FC = () => {
           })}
         </div>
       </section>
+      </>
+      )}
     </main>
   );
 };

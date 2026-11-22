@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
 import { PaperSummary } from '../types';
 import { getPaperSummary } from '../services/api';
+import { SummarySkeleton } from '../components/common/Skeleton';
 
 export const SummarizerPage: React.FC = () => {
   const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
@@ -174,8 +175,10 @@ ${summary.conclusion}
         </button>
       </section>
 
-      {/* Structured Summary Output (2-Column Editorial Layout) */}
-      {summary && (
+      {/* Structured Summary Output or Skeleton Loader */}
+      {busy ? (
+        <SummarySkeleton />
+      ) : summary ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter-lg items-start">
           {/* Main 8-Section Academic Brief (2 columns) */}
           <article className="lg:col-span-2 bg-surface border border-outline-variant rounded-md p-gutter-xl flex flex-col gap-gutter-lg shadow-sm">
@@ -308,7 +311,7 @@ ${summary.conclusion}
             </div>
           </aside>
         </div>
-      )}
+      ) : null}
     </main>
   );
 };
