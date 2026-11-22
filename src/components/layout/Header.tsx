@@ -61,16 +61,16 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           type="button"
           disabled={isProcessing}
           onClick={() => setIsSearchModalOpen(true)}
-          className="hidden sm:flex items-center gap-gutter-md px-3 py-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded text-on-surface-variant transition-colors duration-state-change group disabled:opacity-50 disabled:cursor-not-allowed"
+          className="hidden sm:flex items-center gap-4 px-3.5 py-1.5 bg-surface-container-low/70 hover:bg-surface-container border border-outline-variant rounded-full text-on-surface-variant transition-colors duration-state-change group disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="flex items-center gap-gutter-xs">
-            <span className="material-symbols-outlined text-[16px] group-hover:text-primary transition-colors" aria-hidden="true">
+          <span className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[16px] text-neutral-400 group-hover:text-primary transition-colors" aria-hidden="true">
               search
             </span>
-            <span className="font-body text-body-sm">Search papers &amp; concepts...</span>
+            <span className="font-body text-body-sm text-neutral-500">Search papers &amp; concepts...</span>
           </span>
-          <kbd className="font-mono text-mono-sm text-on-surface-variant bg-surface px-1.5 py-0.5 rounded-sm border border-outline-variant shadow-2xs">
-            ⌘K
+          <kbd className="flex items-center gap-0.5 rounded-md border border-black/[0.06] bg-white px-1.5 py-0.5 font-sans text-[11px] font-medium text-neutral-400 shadow-2xs">
+            <span className="text-[12px] leading-none">⌘</span>K
           </kbd>
         </button>
 
