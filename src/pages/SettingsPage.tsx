@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
+import { LiquidButton } from '../components/common/LiquidButton';
 
 export const SettingsPage: React.FC = () => {
   const { papers, showToast } = useWorkspace();
@@ -84,14 +85,15 @@ export const SettingsPage: React.FC = () => {
             Manage your academic citation standards, AI reading parameters, and export preferences.
           </p>
         </div>
-        <button
+        <LiquidButton
           type="button"
+          variant="solid"
+          size="default"
           onClick={handleSaveSettings}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs active:scale-95"
         >
           <span className="material-symbols-outlined text-[18px]">save</span>
           <span>Save Changes</span>
-        </button>
+        </LiquidButton>
       </section>
 
       {/* 1. Citation & Academic Reference Preferences */}

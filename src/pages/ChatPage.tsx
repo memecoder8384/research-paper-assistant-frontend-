@@ -3,6 +3,7 @@ import { useWorkspace } from '../context/WorkspaceContext';
 import { ChatMessage } from '../types';
 import { sendChatMessage } from '../services/api';
 import { Skeleton, SkeletonText } from '../components/common/Skeleton';
+import { LiquidButton } from '../components/common/LiquidButton';
 
 export const ChatPage: React.FC = () => {
   const {
@@ -139,15 +140,16 @@ export const ChatPage: React.FC = () => {
           </div>
         </div>
 
-        <button
+        <LiquidButton
           type="button"
+          variant="default"
+          size="sm"
           disabled={busy}
           onClick={handleNewConversation}
-          className="inline-flex items-center justify-center gap-gutter-xs px-3 py-1.5 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-md transition-colors duration-state-change shrink-0 shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[16px]" aria-hidden="true">add</span>
           <span>New Conversation</span>
-        </button>
+        </LiquidButton>
       </section>
 
       {/* Conversation Area (Centered Comfortable Reading Width) */}
@@ -392,18 +394,15 @@ export const ChatPage: React.FC = () => {
               <span className="material-symbols-outlined text-[18px]" aria-hidden="true">attach_file</span>
               <span>Select Papers ({selectedPapersForChat.length})</span>
             </button>
-            <button
+            <LiquidButton
               type="submit"
+              variant="solid"
+              size="sm"
               disabled={busy || !inputText.trim()}
-              className={`inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-2 rounded font-label text-label-lg transition-colors duration-state-change ${
-                !inputText.trim() || busy
-                  ? 'bg-surface-container text-on-surface-variant cursor-not-allowed opacity-50'
-                  : 'bg-primary hover:bg-primary-hover text-on-primary shadow-xs'
-              }`}
             >
               <span>Send</span>
               <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_upward</span>
-            </button>
+            </LiquidButton>
           </div>
         </form>
         <p className="font-body text-body-sm text-on-surface-variant text-center">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
 import { LibraryTableSkeleton } from '../components/common/Skeleton';
+import { LiquidButton } from '../components/common/LiquidButton';
 
 export const LibraryPage: React.FC = () => {
   const {
@@ -66,15 +67,16 @@ export const LibraryPage: React.FC = () => {
             Your central workspace for managing academic literature.
           </p>
         </div>
-        <button
+        <LiquidButton
           type="button"
+          variant="solid"
+          size="default"
           disabled={isProcessing}
           onClick={() => setIsUploadModalOpen(true)}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[18px]" aria-hidden="true">upload_file</span>
           <span>Upload Paper</span>
-        </button>
+        </LiquidButton>
       </section>
 
       {/* Compact Drag-and-Drop Upload Section */}
@@ -98,13 +100,14 @@ export const LibraryPage: React.FC = () => {
             </p>
           </div>
         </div>
-        <button
+        <LiquidButton
           type="button"
+          variant="default"
+          size="default"
           disabled={isProcessing}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span>Browse Files</span>
-        </button>
+        </LiquidButton>
       </section>
 
       {/* Search, Filter & State Preview Tabs */}
@@ -232,14 +235,15 @@ export const LibraryPage: React.FC = () => {
                   <strong>Indexing failed</strong> for <span className="font-mono text-mono-sm">{failedPaper.filename}</span> — {failedPaper.failureReason || 'requires OCR pre-processing.'}
                 </span>
               </div>
-              <button
+              <LiquidButton
                 type="button"
+                variant="default"
+                size="sm"
                 disabled={isProcessing}
                 onClick={() => retryPaperIndexing(failedPaper.id)}
-                className="px-3 py-1 rounded bg-surface border border-outline-variant text-on-surface font-label text-label-md hover:bg-surface-container-low shrink-0 transition-colors shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Retry Indexing
-              </button>
+                <span>Retry Indexing</span>
+              </LiquidButton>
             </div>
           )}
 

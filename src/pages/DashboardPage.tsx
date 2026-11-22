@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useWorkspace } from '../context/WorkspaceContext';
+import { LiquidButton } from '../components/common/LiquidButton';
 import { DashboardSkeleton } from '../components/common/Skeleton';
 
 export const DashboardPage: React.FC = () => {
@@ -28,25 +29,27 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-gutter-sm shrink-0">
-          <button
+          <LiquidButton
             type="button"
+            variant="default"
+            size="default"
             disabled={isProcessing}
             onClick={() => navigate('/chat')}
-            className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">forum</span>
             <span>Start Research Chat</span>
-          </button>
+          </LiquidButton>
 
-          <button
+          <LiquidButton
             type="button"
+            variant="solid"
+            size="default"
             disabled={isProcessing}
             onClick={() => setIsUploadModalOpen(true)}
-            className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">upload_file</span>
             <span>Upload Research Paper</span>
-          </button>
+          </LiquidButton>
         </div>
       </section>
 

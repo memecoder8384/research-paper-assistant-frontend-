@@ -3,6 +3,7 @@ import { useWorkspace } from '../context/WorkspaceContext';
 import { PaperSummary } from '../types';
 import { getPaperSummary } from '../services/api';
 import { SummarySkeleton } from '../components/common/Skeleton';
+import { LiquidButton } from '../components/common/LiquidButton';
 
 export const SummarizerPage: React.FC = () => {
   const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
@@ -96,24 +97,26 @@ ${summary.conclusion}
           </p>
         </div>
         <div className="flex items-center gap-gutter-sm shrink-0">
-          <button
+          <LiquidButton
             type="button"
+            variant="default"
+            size="sm"
             disabled={busy || !summary}
             onClick={handleCopySummary}
-            className="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">content_copy</span>
             <span>Copy Summary</span>
-          </button>
-          <button
+          </LiquidButton>
+          <LiquidButton
             type="button"
+            variant="default"
+            size="sm"
             disabled={busy || !summary}
             onClick={handleExportMarkdown}
-            className="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">download</span>
             <span>Export Markdown</span>
-          </button>
+          </LiquidButton>
         </div>
       </section>
 
@@ -150,17 +153,18 @@ ${summary.conclusion}
           </div>
         </div>
 
-        <button
+        <LiquidButton
           type="button"
+          variant="solid"
+          size="default"
           onClick={handleGenerate}
           disabled={busy}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className={`material-symbols-outlined text-[18px] ${busy ? 'animate-spin' : ''}`} aria-hidden="true">
             {busy ? 'sync' : 'auto_awesome'}
           </span>
           <span>{busy ? 'Generating...' : 'Generate Summary'}</span>
-        </button>
+        </LiquidButton>
       </section>
 
       {/* Structured Summary Output or Skeleton Loader */}

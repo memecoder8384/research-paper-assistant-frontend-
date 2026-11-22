@@ -3,6 +3,7 @@ import { useWorkspace } from '../context/WorkspaceContext';
 import { ResearchGap, ThematicCoverage } from '../types';
 import { getResearchGaps } from '../services/api';
 import { GapAnalysisSkeleton } from '../components/common/Skeleton';
+import { LiquidButton } from '../components/common/LiquidButton';
 
 export const GapAnalyzerPage: React.FC = () => {
   const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
@@ -66,17 +67,18 @@ export const GapAnalyzerPage: React.FC = () => {
             Discover unexplored research opportunities through AI-powered literature analysis.
           </p>
         </div>
-        <button
+        <LiquidButton
           type="button"
+          variant="solid"
+          size="default"
           onClick={handleAnalyze}
           disabled={busy}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className={`material-symbols-outlined text-[18px] ${busy ? 'animate-spin' : ''}`} aria-hidden="true">
             {busy ? 'sync' : 'troubleshoot'}
           </span>
           <span>{busy ? 'Analyzing Corpus...' : 'Analyze Research Gaps'}</span>
-        </button>
+        </LiquidButton>
       </section>
 
       {/* Multi-Document Selection Bar */}
