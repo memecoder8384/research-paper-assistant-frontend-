@@ -148,7 +148,7 @@ export const GapAnalyzerPage: React.FC = () => {
       {busy || gaps.length === 0 ? (
         <GapAnalysisSkeleton />
       ) : (
-        <>
+        <div className="flex flex-col gap-gutter-lg animate-slide-up">
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-gutter-lg items-stretch">
         {/* Identified Research Themes Chart */}
         <article className="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md shadow-sm">
@@ -272,7 +272,7 @@ export const GapAnalyzerPage: React.FC = () => {
           })}
         </div>
       </section>
-      </>
+      </div>
       )}
     </main>
   );

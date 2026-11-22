@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { WorkspaceProvider } from './context/WorkspaceContext';
+import { WorkspaceProvider, useWorkspace } from './context/WorkspaceContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { GlobalSearchModal } from './components/common/GlobalSearchModal';
@@ -17,9 +17,15 @@ import { SettingsPage } from './pages/SettingsPage';
 
 const AppContent: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isProcessing } = useWorkspace();
 
   return (
-    <div className="min-h-screen flex bg-background text-on-background font-body antialiased">
+    <div className="min-h-screen flex bg-background text-on-background font-body antialiased relative">
+      {/* Top Global Progress Bar on active process */}
+      {isProcessing && (
+        <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-primary via-accent-violet to-primary animate-progress-flow shadow-sm" />
+      )}
+
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 

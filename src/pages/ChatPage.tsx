@@ -232,7 +232,7 @@ export const ChatPage: React.FC = () => {
         {/* Messages Stream */}
         <div className="flex flex-col gap-gutter-lg">
           {messages.map(msg => (
-            <div key={msg.id} className="flex flex-col gap-2">
+            <div key={msg.id} className="flex flex-col gap-2 animate-slide-up">
               {msg.sender === 'user' ? (
                 <div className="flex justify-end">
                   <div className="max-w-xl bg-primary-container text-on-primary-container rounded-md px-gutter-md py-3 shadow-xs">

@@ -1,14 +1,14 @@
 import React from 'react';
 
 export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <div className={`animate-pulse bg-surface-container/70 rounded ${className}`} />
+  <div className={`skeleton-shimmer rounded ${className}`} />
 );
 
 export const SkeletonLine: React.FC<{ width?: string; height?: string; className?: string }> = ({
   width = 'w-full',
   height = 'h-4',
   className = '',
-}) => <div className={`animate-pulse bg-surface-container/70 rounded ${height} ${width} ${className}`} />;
+}) => <div className={`skeleton-shimmer rounded ${height} ${width} ${className}`} />;
 
 export const SkeletonText: React.FC<{ lines?: number; className?: string }> = ({
   lines = 3,

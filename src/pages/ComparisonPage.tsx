@@ -210,7 +210,7 @@ export const ComparisonPage: React.FC = () => {
       {busy ? (
         <ComparisonSkeleton />
       ) : comparison ? (
-        <>
+        <div className="flex flex-col gap-gutter-lg animate-slide-up">
           <section className="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md shadow-sm">
             <div className="flex items-center gap-gutter-sm">
               <span className="w-7 h-7 rounded bg-primary-container text-primary flex items-center justify-center">
@@ -282,7 +282,7 @@ export const ComparisonPage: React.FC = () => {
               </tbody>
             </table>
           </section>
-        </>
+        </div>
       ) : null}
     </main>
   );

@@ -167,7 +167,7 @@ ${summary.conclusion}
       {busy ? (
         <SummarySkeleton />
       ) : summary ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter-lg items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter-lg items-start animate-slide-up">
           {/* Main 8-Section Academic Brief (2 columns) */}
           <article className="lg:col-span-2 bg-surface border border-outline-variant rounded-md p-gutter-xl flex flex-col gap-gutter-lg shadow-sm">
             {/* 1. Abstract Overview */}
