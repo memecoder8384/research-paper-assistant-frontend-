@@ -3,9 +3,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWorkspace } from '../context/WorkspaceContext';
 import { LiquidButton } from '../components/common/LiquidButton';
 import { DashboardSkeleton } from '../components/common/Skeleton';
+import SwipeRow from '../components/common/SwipeRow';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Archive02Icon, Delete02Icon } from '@hugeicons/core-free-icons';
 
 export const DashboardPage: React.FC = () => {
-  const { papers, stats, setIsUploadModalOpen, backendConnected, isProcessing, isLoadingPapers } = useWorkspace();
+  const {
+    papers,
+    stats,
+    setIsUploadModalOpen,
+    backendConnected,
+    isProcessing,
+    isLoadingPapers,
+    deletePaper,
+    showToast,
+  } = useWorkspace();
   const navigate = useNavigate();
 
   const recentPapers = papers.slice(0, 4);
@@ -136,103 +148,144 @@ export const DashboardPage: React.FC = () => {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-gutter-sm">
+          <div className="flex flex-col">
             {recentPapers.map((paper) => {
               const isProcessing = paper.status === 'processing';
               const isFailed = paper.status === 'failed';
 
               return (
-                <article
+                <SwipeRow
                   key={paper.id}
-                  className="bg-surface border border-outline-variant rounded-md p-gutter-md flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-md hover:border-primary/30 transition-colors"
+                  actions={[
+                    {
+                      id: 'delete',
+                      label: 'Delete',
+                      icon: <HugeiconsIcon icon={Delete02Icon} size={20} />,
+                    },
+                    {
+                      id: 'archive',
+                      label: 'Archive',
+                      icon: <HugeiconsIcon icon={Archive02Icon} size={20} />,
+                      dismiss: true,
+                      drawer: 'two',
+                      disabled: false,
+                    },
+                  ]}
+                  onAction={(action) => {
+                    if (action.id === 'delete') {
+                      deletePaper(paper.id);
+                    } else if (action.id === 'archive') {
+                      showToast(`Archived "${paper.title}"`, 'info');
+                    }
+                  }}
+                  onCommit={(action) => {
+                    if (action.id === 'delete') {
+                      deletePaper(paper.id);
+                    } else if (action.id === 'archive') {
+                      showToast(`Archived "${paper.title}"`, 'info');
+                    }
+                  }}
+                  actionColor="#e5484d"
+                  drawerColor="#3f3f46"
+                  rowColor="#ffffff"
+                  textColor="#172033"
+                  radius={16}
+                  actionWidth={80}
+                  direction="left"
+                  snapBounce={0.2}
+                  resistance={0.55}
+                  collapseMs={200}
+                  commitAt={0.6}
+                  fullSwipe
+                  style={{ marginBottom: 8 }}
                 >
-                  <div className="flex items-start gap-gutter-md min-w-0">
-                    <span
-                      className={`w-10 h-10 rounded flex items-center justify-center shrink-0 mt-0.5 ${
-                        isProcessing
-                          ? 'bg-warning-container text-on-warning-container'
-                          : isFailed
-                          ? 'bg-error-container text-error'
-                          : 'bg-primary-container text-primary'
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
-                        {isProcessing ? 'hourglass_top' : isFailed ? 'error' : 'picture_as_pdf'}
+                  <article className="bg-surface border border-outline-variant rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-md hover:border-primary/40 transition-colors shadow-2xs">
+                    <div className="flex items-start gap-gutter-md min-w-0">
+                      <span
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
+                          isProcessing
+                            ? 'bg-warning-container text-on-warning-container'
+                            : isFailed
+                            ? 'bg-error-container text-error'
+                            : 'bg-primary-container text-primary'
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+                          {isProcessing ? 'hourglass_top' : isFailed ? 'error' : 'picture_as_pdf'}
+                        </span>
                       </span>
-                    </span>
-                    <div className="flex flex-col gap-gutter-xs min-w-0">
-                      <h3 className="font-title text-title-md text-on-surface truncate">{paper.title}</h3>
-                      <div className="flex flex-wrap items-center gap-gutter-sm">
-                        <span className="font-mono text-mono-sm text-on-surface-variant">
-                          {paper.filename} · {paper.size}
-                        </span>
-                        <span className="text-on-surface-variant">·</span>
-                        <span className="font-body text-body-sm text-on-surface-variant">
-                          Uploaded {paper.uploadedAt}
-                        </span>
+                      <div className="flex flex-col gap-0.5 min-w-0">
+                        <h3 className="font-title text-title-md text-on-surface truncate font-semibold">
+                          {paper.title}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-gutter-sm text-xs text-on-surface-variant font-mono">
+                          <span>{paper.filename} · {paper.size}</span>
+                          <span>·</span>
+                          <span className="font-body">Uploaded {paper.uploadedAt}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-gutter-sm shrink-0">
-                    {paper.status === 'indexed' && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true"></span>
-                        <span>Indexed</span>
-                      </span>
-                    )}
-                    {paper.status === 'processing' && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-warning" aria-hidden="true"></span>
-                        <span>Processing</span>
-                      </span>
-                    )}
-                    {paper.status === 'failed' && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-error" aria-hidden="true"></span>
-                        <span>Failed</span>
-                      </span>
-                    )}
+                    <div className="flex items-center justify-between sm:justify-end gap-gutter-sm shrink-0">
+                      {paper.status === 'indexed' && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm font-medium">
+                          <span className="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true"></span>
+                          <span>Indexed</span>
+                        </span>
+                      )}
+                      {paper.status === 'processing' && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm font-medium">
+                          <span className="w-1.5 h-1.5 rounded-full bg-warning" aria-hidden="true"></span>
+                          <span>Processing</span>
+                        </span>
+                      )}
+                      {paper.status === 'failed' && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm font-medium">
+                          <span className="w-1.5 h-1.5 rounded-full bg-error" aria-hidden="true"></span>
+                          <span>Failed</span>
+                        </span>
+                      )}
 
-                    {paper.status === 'indexed' ? (
-                      <>
+                      {paper.status === 'indexed' ? (
+                        <>
+                          <button
+                            type="button"
+                            disabled={isProcessing}
+                            onClick={() => navigate('/summarizer')}
+                            className="px-3 py-1.5 rounded-lg hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label text-label-md transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Summarize
+                          </button>
+                          <button
+                            type="button"
+                            disabled={isProcessing}
+                            onClick={() => navigate('/chat')}
+                            className="px-3 py-1.5 rounded-lg bg-primary-container text-primary hover:bg-primary hover:text-on-primary font-label text-label-md transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Chat
+                          </button>
+                        </>
+                      ) : paper.status === 'processing' ? (
+                        <button
+                          type="button"
+                          disabled
+                          className="px-2.5 py-1.5 rounded text-on-surface-variant font-label text-label-md cursor-not-allowed opacity-50"
+                        >
+                          Indexing...
+                        </button>
+                      ) : (
                         <button
                           type="button"
                           disabled={isProcessing}
-                          onClick={() => navigate('/summarizer')}
-                          className="px-2.5 py-1.5 rounded hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label text-label-md transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => navigate('/library')}
+                          className="px-2.5 py-1.5 rounded text-error hover:bg-error-container font-label text-label-md disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          Summarize
+                          Details
                         </button>
-                        <button
-                          type="button"
-                          disabled={isProcessing}
-                          onClick={() => navigate('/chat')}
-                          className="px-2.5 py-1.5 rounded bg-primary-container text-primary hover:bg-primary hover:text-on-primary font-label text-label-md transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Chat
-                        </button>
-                      </>
-                    ) : paper.status === 'processing' ? (
-                      <button
-                        type="button"
-                        disabled
-                        className="px-2.5 py-1.5 rounded text-on-surface-variant font-label text-label-md cursor-not-allowed opacity-50"
-                      >
-                        Indexing...
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        disabled={isProcessing}
-                        onClick={() => navigate('/library')}
-                        className="px-2.5 py-1.5 rounded text-error hover:bg-error-container font-label text-label-md disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Details
-                      </button>
-                    )}
-                  </div>
-                </article>
+                      )}
+                    </div>
+                  </article>
+                </SwipeRow>
               );
             })}
           </div>
