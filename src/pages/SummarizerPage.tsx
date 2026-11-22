@@ -22,7 +22,7 @@ export const SummarizerPage: React.FC = () => {
     if (!selectedPaperId || busy) return;
     setIsGenerating(true);
     setIsProcessing(true);
-    showToast('Synthesizing academic brief with Gemini...', 'info');
+    showToast('Generating summary...', 'info');
     getPaperSummary(selectedPaperId)
       .then(data => {
         setSummary(data);
