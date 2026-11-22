@@ -1,0 +1,481 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Paper Library — Research Paper Assistant</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'background': '#F8FAFC',
+        'on-background': '#172033',
+        'surface': '#FFFFFF',
+        'on-surface': '#172033',
+        'on-surface-variant': '#526075',
+        'surface-container-low': '#F1F5F9',
+        'surface-container': '#E2E8F0',
+        'primary': '#5455D6',
+        'on-primary': '#FFFFFF',
+        'primary-hover': '#4344C2',
+        'primary-container': '#EAF0FF',
+        'on-primary-container': '#172033',
+        'secondary': '#475569',
+        'on-secondary': '#FFFFFF',
+        'secondary-container': '#F1F5F9',
+        'on-secondary-container': '#172033',
+        'accent-violet': '#6D28D9',
+        'on-accent-violet': '#FFFFFF',
+        'accent-violet-container': '#F3E8FF',
+        'on-accent-violet-container': '#4C1D95',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#059669',
+        'on-success': '#1C1C1C',
+        'success-container': '#ECFDF5',
+        'on-success-container': '#065F46',
+        'warning': '#D97706',
+        'on-warning': '#2A2A2A',
+        'warning-container': '#FFFBEB',
+        'on-warning-container': '#92400E',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEF2F2',
+        'on-error-container': '#991B1B',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '10px',
+        'md': '12px',
+        'lg': '14px',
+        'xl': '16px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '32px',
+      },
+      fontFamily: {
+        'display': ['"Plus Jakarta Sans"', 'sans-serif'],
+        'headline': ['"Plus Jakarta Sans"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['36px', { lineHeight: '44px', letterSpacing: '-0.75px', fontWeight: '700' }],
+        'display-lg-mobile': ['28px', { lineHeight: '36px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-md': ['20px', { lineHeight: '28px', letterSpacing: '-0.3px', fontWeight: '600' }],
+        'headline-sm': ['16px', { lineHeight: '24px', letterSpacing: '-0.15px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-lg': ['15px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '21px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '19px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-lg': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '14px', letterSpacing: '0.2px', fontWeight: '500' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '150ms',
+        'surface-enter': '200ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+  <div class="min-h-[1024px] flex bg-background" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+    <!-- Left Sidebar -->
+    <aside class="w-64 shrink-0 bg-surface border-r border-outline-variant flex flex-col justify-between min-h-[1024px] hidden lg:flex" data-stitch-vh="min-h-[1024px]===min-h-screen">
+      <div class="p-gutter-md flex flex-col gap-gutter-lg">
+        <div class="flex items-center justify-between px-1 pt-1">
+          <div class="flex items-center gap-gutter-sm">
+            <span class="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">science</span>
+            </span>
+            <span class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Research Assistant</span>
+          </div>
+          <button type="button" aria-label="Collapse sidebar" class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">dock_to_left</span>
+          </button>
+        </div>
+
+        <button type="button" class="w-full flex items-center justify-between px-3 py-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded transition-colors duration-state-change text-left">
+          <div class="flex flex-col min-w-0">
+            <span class="font-label text-label-lg text-on-surface truncate" data-design-text-token="label-lg">NLP &amp; Reasoning Lab</span>
+            <span class="font-label text-label-sm text-on-surface-variant" data-design-text-token="label-sm">48 papers · 4 collections</span>
+          </div>
+          <span class="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0" aria-hidden="true">unfold_more</span>
+        </button>
+
+        <nav aria-label="Primary" class="flex flex-col gap-gutter-xs">
+          <a href="../research-dashboard/ResearchDashboard.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">dashboard</span>
+            <span data-design-text-token="label-lg">Overview</span>
+          </a>
+          <a href="../research-library/ResearchLibrary.html" aria-current="page" class="flex items-center gap-gutter-sm px-3 py-2 rounded bg-primary-container text-primary font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">folder_open</span>
+            <span data-design-text-token="label-lg">Research Library</span>
+          </a>
+          <a href="../ai-research-chat/AiResearchChat.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">forum</span>
+            <span data-design-text-token="label-lg">AI Research Chat</span>
+          </a>
+          <a href="../paper-summarizer/PaperSummarizer.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">summarize</span>
+            <span data-design-text-token="label-lg">Paper Summarizer</span>
+          </a>
+          <a href="../paper-comparison/PaperComparison.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">compare_arrows</span>
+            <span data-design-text-token="label-lg">Paper Comparison</span>
+          </a>
+          <a href="../research-gap-analyzer/ResearchGapAnalyzer.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">troubleshoot</span>
+            <span data-design-text-token="label-lg">Research Gap Analyzer</span>
+          </a>
+          <a href="#" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">settings</span>
+            <span data-design-text-token="label-lg">Settings</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="p-gutter-md border-t border-outline-variant flex flex-col gap-gutter-sm">
+        <div class="flex items-center justify-between gap-gutter-sm px-2 py-1.5 rounded hover:bg-surface-container-low transition-colors duration-state-change cursor-pointer">
+          <div class="flex items-center gap-gutter-sm min-w-0">
+            <span class="w-8 h-8 rounded-full bg-primary-container text-primary font-label text-label-md flex items-center justify-center shrink-0" data-design-text-token="label-md">EV</span>
+            <div class="flex flex-col min-w-0">
+              <span class="font-label text-label-lg text-on-surface truncate" data-design-text-token="label-lg">Dr. Elena Vance</span>
+              <span class="font-label text-label-sm text-on-surface-variant truncate" data-design-text-token="label-sm">Academic Pro</span>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0" aria-hidden="true">more_horiz</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Column -->
+    <div class="flex-1 min-w-0 flex flex-col min-h-[1024px]" data-stitch-vh="min-h-[1024px]===min-h-screen">
+      <!-- Top Header -->
+      <header class="h-16 bg-surface border-b border-outline-variant px-gutter-lg lg:px-gutter-xl flex items-center justify-between gap-gutter-md sticky top-0 z-20">
+        <div class="flex items-center gap-gutter-sm min-w-0">
+          <button type="button" aria-label="Open navigation menu" class="lg:hidden p-2 rounded border border-outline-variant text-on-surface-variant hover:text-on-surface">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">menu</span>
+          </button>
+          <nav aria-label="Breadcrumb" class="flex items-center gap-gutter-xs">
+            <span class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">Workspace</span>
+            <span class="text-on-surface-variant">/</span>
+            <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Research Library</span>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-gutter-sm">
+          <button type="button" class="hidden sm:flex items-center gap-gutter-md px-3 py-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded text-on-surface-variant transition-colors duration-state-change">
+            <span class="flex items-center gap-gutter-xs">
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">search</span>
+              <span class="font-body text-body-sm" data-design-text-token="body-sm">Search papers...</span>
+            </span>
+            <kbd class="font-mono text-mono-sm text-on-surface-variant bg-surface px-1.5 py-0.5 rounded-sm border border-outline-variant">⌘K</kbd>
+          </button>
+
+          <button data-component-id="button-icon" data-component-type="button" data-component-variant="icon" type="button" aria-label="Notifications" class="relative inline-flex items-center justify-center w-9 h-9 bg-surface hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface border border-outline-variant rounded transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">notifications</span>
+            <span class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+          </button>
+
+          <button type="button" aria-label="User profile menu" class="w-9 h-9 rounded-full bg-primary-container text-primary font-label text-label-md flex items-center justify-center border border-outline-variant">
+            <span data-design-text-token="label-md">EV</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="flex-1 p-gutter-lg lg:p-gutter-xl max-w-[1200px] w-full mx-auto flex flex-col gap-gutter-lg">
+
+        <!-- Page Header -->
+        <section class="flex flex-col sm:flex-row sm:items-end justify-between gap-gutter-md">
+          <div class="flex flex-col gap-gutter-xs">
+            <h1 class="font-headline text-headline-lg text-on-surface" data-design-text-token="headline-lg">Research Library</h1>
+            <p class="font-body text-body-lg text-on-surface-variant" data-design-text-token="body-lg">
+              Your central workspace for managing academic literature.
+            </p>
+          </div>
+          <button data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">upload_file</span>
+            <span data-design-text-token="label-lg">Upload Paper</span>
+          </button>
+        </section>
+
+        <!-- Compact Drag-and-Drop Upload Section -->
+        <section aria-label="Upload research papers" class="bg-surface border-2 border-dashed border-outline hover:border-primary rounded-lg p-gutter-lg flex flex-col sm:flex-row items-center justify-between gap-gutter-md transition-colors duration-state-change">
+          <div class="flex items-center gap-gutter-md">
+            <span class="w-11 h-11 rounded bg-primary-container text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[22px]" aria-hidden="true">cloud_upload</span>
+            </span>
+            <div class="flex flex-col gap-gutter-xs">
+              <h2 class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Drop your research papers here.</h2>
+              <p class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">PDF format supported up to 50 MB per file · Automatic text &amp; citation indexing</p>
+            </div>
+          </div>
+          <button data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shrink-0">
+            <span data-design-text-token="label-lg">Browse Files</span>
+          </button>
+        </section>
+
+        <!-- Search, Filter & State Preview Tabs -->
+        <section class="flex flex-col gap-gutter-md">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-gutter-sm">
+            <!-- Search Input -->
+            <div class="relative flex items-center flex-1 max-w-md">
+              <span class="material-symbols-outlined text-[18px] text-on-surface-variant absolute left-3 pointer-events-none" aria-hidden="true">search</span>
+              <input type="search" placeholder="Search papers by title or filename..." class="w-full pl-9 pr-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-md text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none">
+            </div>
+
+            <!-- Filter & Sort Controls -->
+            <div class="flex flex-wrap items-center gap-gutter-sm">
+              <select aria-label="Filter by status" class="px-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none">
+                <option value="all">Status: All (48)</option>
+                <option value="indexed">Indexed (45)</option>
+                <option value="processing">Processing (2)</option>
+                <option value="failed">Failed (1)</option>
+              </select>
+
+              <select aria-label="Sort papers" class="px-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none">
+                <option value="date-desc">Sort: Upload Date (Newest)</option>
+                <option value="title-asc">Sort: Title (A–Z)</option>
+              </select>
+
+              <!-- View State Switcher (for Empty / Loading / Error preview) -->
+              <div role="tablist" aria-label="Library state view" class="inline-flex items-center bg-surface-container-low p-1 rounded border border-outline-variant">
+                <button type="button" role="tab" aria-selected="true" onclick="showLibraryTab(&#39;active&#39;)" id="tab-active" class="px-2.5 py-1 rounded-sm bg-surface text-on-surface shadow-sm font-label text-label-sm">Documents</button>
+                <button type="button" role="tab" aria-selected="false" onclick="showLibraryTab(&#39;loading&#39;)" id="tab-loading" class="px-2.5 py-1 rounded-sm text-on-surface-variant hover:text-on-surface font-label text-label-sm">Loading</button>
+                <button type="button" role="tab" aria-selected="false" onclick="showLibraryTab(&#39;empty&#39;)" id="tab-empty" class="px-2.5 py-1 rounded-sm text-on-surface-variant hover:text-on-surface font-label text-label-sm">Empty</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Filter Chips -->
+          <div class="flex flex-wrap items-center gap-gutter-sm">
+            <button type="button" class="px-3 py-1 rounded-full bg-primary-container text-primary font-label text-label-md" data-design-text-token="label-md">All Categories (48)</button>
+            <button type="button" class="px-3 py-1 rounded-full bg-surface border border-outline-variant text-on-surface-variant hover:text-on-surface font-label text-label-md" data-design-text-token="label-md">LLM Reasoning (18)</button>
+            <button type="button" class="px-3 py-1 rounded-full bg-surface border border-outline-variant text-on-surface-variant hover:text-on-surface font-label text-label-md" data-design-text-token="label-md">Retrieval &amp; RAG (14)</button>
+            <button type="button" class="px-3 py-1 rounded-full bg-surface border border-outline-variant text-on-surface-variant hover:text-on-surface font-label text-label-md" data-design-text-token="label-md">Alignment &amp; Safety (9)</button>
+            <button type="button" class="px-3 py-1 rounded-full bg-surface border border-outline-variant text-on-surface-variant hover:text-on-surface font-label text-label-md" data-design-text-token="label-md">Benchmarks (7)</button>
+          </div>
+        </section>
+
+        <!-- Active Documents View -->
+        <section id="panel-active" class="flex flex-col gap-gutter-md">
+          <!-- Error Notification Banner for Failed Paper -->
+          <div role="alert" class="bg-error-container border border-outline-variant rounded-md px-gutter-md py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+            <div class="flex items-center gap-gutter-sm">
+              <span class="material-symbols-outlined text-[18px] text-error shrink-0" aria-hidden="true">error</span>
+              <span class="font-body text-body-sm text-on-error-container" data-design-text-token="body-sm">
+                <strong>Indexing failed</strong> for <span class="font-mono text-mono-sm">scan_1998_hinton_boltzmann.pdf</span> — scanned PDF requires OCR pre-processing.
+              </span>
+            </div>
+            <button type="button" class="px-3 py-1 rounded bg-surface border border-outline-variant text-on-surface font-label text-label-md hover:bg-surface-container-low shrink-0" data-design-text-token="label-md">Retry Indexing</button>
+          </div>
+
+          <!-- Document Table -->
+          <div data-component-id="table-standard" data-component-type="table" data-component-variant="standard" class="bg-surface border border-outline-variant rounded-md overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[760px]">
+              <thead>
+                <tr class="bg-surface-container-low border-b border-outline-variant">
+                  <th scope="col" class="px-gutter-md py-3 font-label text-label-md text-on-surface-variant" data-design-text-token="label-md">Paper Title</th>
+                  <th scope="col" class="px-gutter-md py-3 font-label text-label-md text-on-surface-variant" data-design-text-token="label-md">Filename</th>
+                  <th scope="col" class="px-gutter-md py-3 font-label text-label-md text-on-surface-variant" data-design-text-token="label-md">Uploaded</th>
+                  <th scope="col" class="px-gutter-md py-3 font-label text-label-md text-on-surface-variant" data-design-text-token="label-md">Size</th>
+                  <th scope="col" class="px-gutter-md py-3 font-label text-label-md text-on-surface-variant" data-design-text-token="label-md">Status</th>
+                  <th scope="col" class="px-gutter-md py-3 font-label text-label-md text-on-surface-variant text-right" data-design-text-token="label-md">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-outline-variant">
+                <tr class="hover:bg-surface-container-low transition-colors duration-state-change">
+                  <td class="px-gutter-md py-3.5">
+                    <div class="flex items-center gap-gutter-sm">
+                      <span class="material-symbols-outlined text-[18px] text-primary shrink-0" aria-hidden="true">picture_as_pdf</span>
+                      <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Retrieval-Augmented Generation for Knowledge-Intensive NLP</span>
+                    </div>
+                  </td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">lewis_2020_rag.pdf</td>
+                  <td class="px-gutter-md py-3.5 font-body text-body-sm text-on-surface-variant tabular-nums" data-design-text-token="body-sm">Nov 20, 2026</td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant tabular-nums" data-design-text-token="mono-sm">3.8 MB</td>
+                  <td class="px-gutter-md py-3.5">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm" data-design-text-token="label-sm">
+                      <span class="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true"></span>Indexed
+                    </span>
+                  </td>
+                  <td class="px-gutter-md py-3.5 text-right">
+                    <button type="button" aria-label="Paper actions" class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface">
+                      <span class="material-symbols-outlined text-[18px]" aria-hidden="true">more_horiz</span>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container-low transition-colors duration-state-change">
+                  <td class="px-gutter-md py-3.5">
+                    <div class="flex items-center gap-gutter-sm">
+                      <span class="material-symbols-outlined text-[18px] text-primary shrink-0" aria-hidden="true">picture_as_pdf</span>
+                      <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Attention Is All You Need</span>
+                    </div>
+                  </td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">vaswani_2017_transformers.pdf</td>
+                  <td class="px-gutter-md py-3.5 font-body text-body-sm text-on-surface-variant tabular-nums" data-design-text-token="body-sm">Nov 19, 2026</td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant tabular-nums" data-design-text-token="mono-sm">2.2 MB</td>
+                  <td class="px-gutter-md py-3.5">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm" data-design-text-token="label-sm">
+                      <span class="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true"></span>Indexed
+                    </span>
+                  </td>
+                  <td class="px-gutter-md py-3.5 text-right">
+                    <button type="button" aria-label="Paper actions" class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface">
+                      <span class="material-symbols-outlined text-[18px]" aria-hidden="true">more_horiz</span>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container-low transition-colors duration-state-change">
+                  <td class="px-gutter-md py-3.5">
+                    <div class="flex items-center gap-gutter-sm">
+                      <span class="material-symbols-outlined text-[18px] text-warning shrink-0" aria-hidden="true">picture_as_pdf</span>
+                      <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Constitutional AI: Harmlessness from AI Feedback</span>
+                    </div>
+                  </td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">bai_2022_constitutional_ai.pdf</td>
+                  <td class="px-gutter-md py-3.5 font-body text-body-sm text-on-surface-variant tabular-nums" data-design-text-token="body-sm">Nov 22, 2026</td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant tabular-nums" data-design-text-token="mono-sm">5.1 MB</td>
+                  <td class="px-gutter-md py-3.5">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-warning-container text-on-warning-container font-label text-label-sm" data-design-text-token="label-sm">
+                      <span class="w-1.5 h-1.5 rounded-full bg-warning" aria-hidden="true"></span>Processing
+                    </span>
+                  </td>
+                  <td class="px-gutter-md py-3.5 text-right">
+                    <button type="button" aria-label="Paper actions" class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface">
+                      <span class="material-symbols-outlined text-[18px]" aria-hidden="true">more_horiz</span>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container-low transition-colors duration-state-change">
+                  <td class="px-gutter-md py-3.5">
+                    <div class="flex items-center gap-gutter-sm">
+                      <span class="material-symbols-outlined text-[18px] text-primary shrink-0" aria-hidden="true">picture_as_pdf</span>
+                      <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Chain-of-Thought Prompting Elicits Reasoning in LLMs</span>
+                    </div>
+                  </td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">wei_2022_cot_prompting.pdf</td>
+                  <td class="px-gutter-md py-3.5 font-body text-body-sm text-on-surface-variant tabular-nums" data-design-text-token="body-sm">Nov 17, 2026</td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant tabular-nums" data-design-text-token="mono-sm">4.4 MB</td>
+                  <td class="px-gutter-md py-3.5">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-container text-on-success-container font-label text-label-sm" data-design-text-token="label-sm">
+                      <span class="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true"></span>Indexed
+                    </span>
+                  </td>
+                  <td class="px-gutter-md py-3.5 text-right">
+                    <button type="button" aria-label="Paper actions" class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface">
+                      <span class="material-symbols-outlined text-[18px]" aria-hidden="true">more_horiz</span>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container-low transition-colors duration-state-change">
+                  <td class="px-gutter-md py-3.5">
+                    <div class="flex items-center gap-gutter-sm">
+                      <span class="material-symbols-outlined text-[18px] text-error shrink-0" aria-hidden="true">picture_as_pdf</span>
+                      <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Learning and Evaluating Generalizable Boltzmann Machines</span>
+                    </div>
+                  </td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">scan_1998_hinton_boltzmann.pdf</td>
+                  <td class="px-gutter-md py-3.5 font-body text-body-sm text-on-surface-variant tabular-nums" data-design-text-token="body-sm">Nov 15, 2026</td>
+                  <td class="px-gutter-md py-3.5 font-mono text-mono-sm text-on-surface-variant tabular-nums" data-design-text-token="mono-sm">8.9 MB</td>
+                  <td class="px-gutter-md py-3.5">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label text-label-sm" data-design-text-token="label-sm">
+                      <span class="w-1.5 h-1.5 rounded-full bg-error" aria-hidden="true"></span>Failed
+                    </span>
+                  </td>
+                  <td class="px-gutter-md py-3.5 text-right">
+                    <button type="button" aria-label="Paper actions" class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface">
+                      <span class="material-symbols-outlined text-[18px]" aria-hidden="true">more_horiz</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Loading State Panel (Hidden by default) -->
+        <section id="panel-loading" class="hidden bg-surface border border-outline-variant rounded-md p-gutter-xl flex flex-col items-center justify-center gap-gutter-md text-center">
+          <span class="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]" aria-hidden="true">sync</span>
+          </span>
+          <div class="flex flex-col gap-gutter-xs">
+            <h2 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Loading research library...</h2>
+            <p class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">Fetching indexed documents and vector embeddings from your workspace.</p>
+          </div>
+        </section>
+
+        <!-- Empty State Panel (Hidden by default) -->
+        <section id="panel-empty" class="hidden bg-surface border border-outline-variant rounded-md p-gutter-xl flex flex-col items-center justify-center gap-gutter-md text-center">
+          <span class="w-12 h-12 rounded-lg bg-surface-container-low text-on-surface-variant flex items-center justify-center">
+            <span class="material-symbols-outlined text-[24px]" aria-hidden="true">library_books</span>
+          </span>
+          <div class="flex flex-col gap-gutter-xs max-w-md">
+            <h2 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">No research papers yet</h2>
+            <p class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">Upload your first academic PDF to begin indexing, summarizing, and chatting with your literature.</p>
+          </div>
+          <button type="button" class="inline-flex items-center gap-gutter-sm px-gutter-md py-2 bg-primary text-on-primary rounded font-label text-label-lg" data-design-text-token="label-lg">Upload Research Paper</button>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function showLibraryTab(tab) {
+      const panels = ['active', 'loading', 'empty'];
+      panels.forEach(p => {
+        const panel = document.getElementById('panel-' + p);
+        const btn = document.getElementById('tab-' + p);
+        if (p === tab) {
+          panel.classList.remove('hidden');
+          btn.setAttribute('aria-selected', 'true');
+          btn.classList.add('bg-surface', 'text-on-surface', 'shadow-sm');
+          btn.classList.remove('text-on-surface-variant');
+        } else {
+          panel.classList.add('hidden');
+          btn.setAttribute('aria-selected', 'false');
+          btn.classList.remove('bg-surface', 'text-on-surface', 'shadow-sm');
+          btn.classList.add('text-on-surface-variant');
+        }
+      });
+    }
+  </script>
+
+
+</body></html>

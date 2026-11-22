@@ -1,0 +1,373 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Research Chat — Research Paper Assistant</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'background': '#F8FAFC',
+        'on-background': '#172033',
+        'surface': '#FFFFFF',
+        'on-surface': '#172033',
+        'on-surface-variant': '#526075',
+        'surface-container-low': '#F1F5F9',
+        'surface-container': '#E2E8F0',
+        'primary': '#5455D6',
+        'on-primary': '#FFFFFF',
+        'primary-hover': '#4344C2',
+        'primary-container': '#EAF0FF',
+        'on-primary-container': '#172033',
+        'secondary': '#475569',
+        'on-secondary': '#FFFFFF',
+        'secondary-container': '#F1F5F9',
+        'on-secondary-container': '#172033',
+        'accent-violet': '#6D28D9',
+        'on-accent-violet': '#FFFFFF',
+        'accent-violet-container': '#F3E8FF',
+        'on-accent-violet-container': '#4C1D95',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#059669',
+        'on-success': '#1C1C1C',
+        'success-container': '#ECFDF5',
+        'on-success-container': '#065F46',
+        'warning': '#D97706',
+        'on-warning': '#2A2A2A',
+        'warning-container': '#FFFBEB',
+        'on-warning-container': '#92400E',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEF2F2',
+        'on-error-container': '#991B1B',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '10px',
+        'md': '12px',
+        'lg': '14px',
+        'xl': '16px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '32px',
+      },
+      fontFamily: {
+        'display': ['"Plus Jakarta Sans"', 'sans-serif'],
+        'headline': ['"Plus Jakarta Sans"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['36px', { lineHeight: '44px', letterSpacing: '-0.75px', fontWeight: '700' }],
+        'display-lg-mobile': ['28px', { lineHeight: '36px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-md': ['20px', { lineHeight: '28px', letterSpacing: '-0.3px', fontWeight: '600' }],
+        'headline-sm': ['16px', { lineHeight: '24px', letterSpacing: '-0.15px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-lg': ['15px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '21px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '19px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-lg': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '14px', letterSpacing: '0.2px', fontWeight: '500' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '150ms',
+        'surface-enter': '200ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+  <div class="min-h-[1024px] flex bg-background" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+    <!-- Left Sidebar -->
+    <aside class="w-64 shrink-0 bg-surface border-r border-outline-variant flex flex-col justify-between min-h-[1024px] hidden lg:flex" data-stitch-vh="min-h-[1024px]===min-h-screen">
+      <div class="p-gutter-md flex flex-col gap-gutter-lg">
+        <div class="flex items-center justify-between px-1 pt-1">
+          <div class="flex items-center gap-gutter-sm">
+            <span class="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">science</span>
+            </span>
+            <span class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Research Assistant</span>
+          </div>
+          <button type="button" aria-label="Collapse sidebar" class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">dock_to_left</span>
+          </button>
+        </div>
+
+        <button type="button" class="w-full flex items-center justify-between px-3 py-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded transition-colors duration-state-change text-left">
+          <div class="flex flex-col min-w-0">
+            <span class="font-label text-label-lg text-on-surface truncate" data-design-text-token="label-lg">NLP &amp; Reasoning Lab</span>
+            <span class="font-label text-label-sm text-on-surface-variant" data-design-text-token="label-sm">48 papers · 4 collections</span>
+          </div>
+          <span class="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0" aria-hidden="true">unfold_more</span>
+        </button>
+
+        <nav aria-label="Primary" class="flex flex-col gap-gutter-xs">
+          <a href="../research-dashboard/ResearchDashboard.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">dashboard</span>
+            <span data-design-text-token="label-lg">Overview</span>
+          </a>
+          <a href="../research-library/ResearchLibrary.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">folder_open</span>
+            <span data-design-text-token="label-lg">Research Library</span>
+          </a>
+          <a href="../ai-research-chat/AiResearchChat.html" aria-current="page" class="flex items-center gap-gutter-sm px-3 py-2 rounded bg-primary-container text-primary font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">forum</span>
+            <span data-design-text-token="label-lg">AI Research Chat</span>
+          </a>
+          <a href="../paper-summarizer/PaperSummarizer.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">summarize</span>
+            <span data-design-text-token="label-lg">Paper Summarizer</span>
+          </a>
+          <a href="../paper-comparison/PaperComparison.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">compare_arrows</span>
+            <span data-design-text-token="label-lg">Paper Comparison</span>
+          </a>
+          <a href="../research-gap-analyzer/ResearchGapAnalyzer.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">troubleshoot</span>
+            <span data-design-text-token="label-lg">Research Gap Analyzer</span>
+          </a>
+          <a href="#" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">settings</span>
+            <span data-design-text-token="label-lg">Settings</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="p-gutter-md border-t border-outline-variant flex flex-col gap-gutter-sm">
+        <div class="flex items-center justify-between gap-gutter-sm px-2 py-1.5 rounded hover:bg-surface-container-low transition-colors duration-state-change cursor-pointer">
+          <div class="flex items-center gap-gutter-sm min-w-0">
+            <span class="w-8 h-8 rounded-full bg-primary-container text-primary font-label text-label-md flex items-center justify-center shrink-0" data-design-text-token="label-md">EV</span>
+            <div class="flex flex-col min-w-0">
+              <span class="font-label text-label-lg text-on-surface truncate" data-design-text-token="label-lg">Dr. Elena Vance</span>
+              <span class="font-label text-label-sm text-on-surface-variant truncate" data-design-text-token="label-sm">Academic Pro</span>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0" aria-hidden="true">more_horiz</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Column -->
+    <div class="flex-1 min-w-0 flex flex-col min-h-[1024px]" data-stitch-vh="min-h-[1024px]===min-h-screen">
+      <!-- Top Header -->
+      <header class="h-16 bg-surface border-b border-outline-variant px-gutter-lg lg:px-gutter-xl flex items-center justify-between gap-gutter-md sticky top-0 z-20">
+        <div class="flex items-center gap-gutter-sm min-w-0">
+          <button type="button" aria-label="Open navigation menu" class="lg:hidden p-2 rounded border border-outline-variant text-on-surface-variant hover:text-on-surface">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">menu</span>
+          </button>
+          <nav aria-label="Breadcrumb" class="flex items-center gap-gutter-xs">
+            <span class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">Workspace</span>
+            <span class="text-on-surface-variant">/</span>
+            <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">AI Research Chat</span>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-gutter-sm">
+          <button type="button" class="hidden sm:flex items-center gap-gutter-md px-3 py-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded text-on-surface-variant transition-colors duration-state-change">
+            <span class="flex items-center gap-gutter-xs">
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">search</span>
+              <span class="font-body text-body-sm" data-design-text-token="body-sm">Search papers...</span>
+            </span>
+            <kbd class="font-mono text-mono-sm text-on-surface-variant bg-surface px-1.5 py-0.5 rounded-sm border border-outline-variant">⌘K</kbd>
+          </button>
+
+          <button data-component-id="button-icon" data-component-type="button" data-component-variant="icon" type="button" aria-label="Notifications" class="relative inline-flex items-center justify-center w-9 h-9 bg-surface hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface border border-outline-variant rounded transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">notifications</span>
+            <span class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+          </button>
+
+          <button type="button" aria-label="User profile menu" class="w-9 h-9 rounded-full bg-primary-container text-primary font-label text-label-md flex items-center justify-center border border-outline-variant">
+            <span data-design-text-token="label-md">EV</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="flex-1 p-gutter-lg lg:p-gutter-xl max-w-[1200px] w-full mx-auto flex flex-col justify-between gap-gutter-lg">
+
+        <!-- Chat Workspace Controls -->
+        <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-md pb-gutter-md border-b border-outline-variant">
+          <div class="flex flex-wrap items-center gap-gutter-sm">
+            <h1 class="font-headline text-headline-md text-on-surface mr-gutter-sm" data-design-text-token="headline-md">Research Chat</h1>
+            <div class="flex items-center gap-gutter-xs">
+              <select aria-label="Select documents for chat" class="px-3 py-1.5 bg-surface border border-outline-variant rounded font-body text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none">
+                <option>Active Context: NLP &amp; RAG Papers</option>
+                <option>All Indexed Papers (45)</option>
+                <option>Single Paper: Lewis et al. (2020)</option>
+              </select>
+              <span data-component-id="badge-numeric" data-component-type="badge" data-component-variant="numeric" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-container text-primary font-mono text-mono-sm tabular-nums">
+                <span data-design-text-token="mono-sm">3 selected</span>
+              </span>
+            </div>
+          </div>
+
+          <button data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center justify-center gap-gutter-xs px-3 py-1.5 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-md transition-colors duration-state-change shrink-0">
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">add</span>
+            <span data-design-text-token="label-md">New Conversation</span>
+          </button>
+        </section>
+
+        <!-- Conversation Area (Centered Comfortable Reading Width) -->
+        <section class="max-w-3xl w-full mx-auto flex-1 flex flex-col gap-gutter-lg">
+
+          <!-- Selected Document Chips -->
+          <div class="flex flex-wrap items-center gap-gutter-xs">
+            <span class="font-label text-label-sm text-on-surface-variant mr-1" data-design-text-token="label-sm">Grounding in:</span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface border border-outline-variant font-label text-label-sm text-on-surface">
+              <span data-design-text-token="label-sm">Lewis et al. (2020) — RAG</span>
+              <button type="button" aria-label="Remove paper" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">close</span></button>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface border border-outline-variant font-label text-label-sm text-on-surface">
+              <span data-design-text-token="label-sm">Vaswani et al. (2017) — Attention</span>
+              <button type="button" aria-label="Remove paper" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">close</span></button>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface border border-outline-variant font-label text-label-sm text-on-surface">
+              <span data-design-text-token="label-sm">Wei et al. (2022) — Chain-of-Thought</span>
+              <button type="button" aria-label="Remove paper" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">close</span></button>
+            </span>
+          </div>
+
+          <!-- Welcome / Suggested Prompts Strip -->
+          <div class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md">
+            <div class="flex items-start gap-gutter-md">
+              <span class="w-10 h-10 rounded bg-primary-container text-primary flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[20px]" aria-hidden="true">auto_awesome</span>
+              </span>
+              <div class="flex flex-col gap-gutter-xs">
+                <h2 class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Ask questions grounded in your literature</h2>
+                <p class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">
+                  Every response is synthesized directly from the 3 selected papers with verifiable page citations.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-sm">
+              <button type="button" class="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container transition-colors duration-state-change font-body text-body-sm text-on-surface" data-design-text-token="body-sm">
+                &#34;Explain the methodology used in this paper.&#34;
+              </button>
+              <button type="button" class="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container transition-colors duration-state-change font-body text-body-sm text-on-surface" data-design-text-token="body-sm">
+                &#34;What are the main findings?&#34;
+              </button>
+              <button type="button" class="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container transition-colors duration-state-change font-body text-body-sm text-on-surface" data-design-text-token="body-sm">
+                &#34;Identify the limitations of this research.&#34;
+              </button>
+              <button type="button" class="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container transition-colors duration-state-change font-body text-body-sm text-on-surface" data-design-text-token="body-sm">
+                &#34;Compare the conclusions of selected papers.&#34;
+              </button>
+            </div>
+          </div>
+
+          <!-- User Message -->
+          <div class="flex justify-end">
+            <div class="max-w-xl bg-primary-container text-on-primary-container rounded-md px-gutter-md py-3">
+              <p class="font-body text-body-md" data-design-text-token="body-md">
+                How does RAG-Token differ from RAG-Sequence in Lewis et al. (2020), and what trade-offs were observed on open-domain QA?
+              </p>
+            </div>
+          </div>
+
+          <!-- AI Response with Embedded Source Citation Cards -->
+          <article class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-gutter-sm">
+                <span class="w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[14px]" aria-hidden="true">science</span>
+                </span>
+                <span class="font-label text-label-md text-on-surface" data-design-text-token="label-md">Research Assistant</span>
+              </div>
+              <span class="font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">2 citations verified</span>
+            </div>
+
+            <div class="flex flex-col gap-gutter-sm max-w-prose">
+              <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Marginalization Granularity: Sequence vs. Token</h3>
+              <p class="font-body text-body-md text-on-surface text-pretty" data-design-text-token="body-md">
+                Lewis et al. (2020) introduce two formulations that differ in how they marginalize over the top-K retrieved Wikipedia passages during generation:
+              </p>
+              <ul class="list-disc pl-5 flex flex-col gap-gutter-xs font-body text-body-md text-on-surface">
+                <li data-design-text-token="body-md"><strong>RAG-Sequence:</strong> Conditions the entire generated output sequence on the same single retrieved document, marginalizing at the sequence level via beam search.</li>
+                <li data-design-text-token="body-md"><strong>RAG-Token:</strong> Allows each target token to attend to a different retrieved passage, enabling the generator to synthesize facts across multiple documents within one answer.</li>
+              </ul>
+            </div>
+
+            <!-- Embedded Citation Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-sm pt-gutter-sm border-t border-outline-variant">
+              <div class="bg-background border border-outline-variant rounded p-3 flex flex-col gap-gutter-xs">
+                <div class="flex items-center justify-between gap-gutter-xs">
+                  <span class="font-label text-label-md text-primary truncate" data-design-text-token="label-md">Lewis et al. (2020) — RAG</span>
+                  <span class="px-2 py-0.5 rounded bg-primary-container text-primary font-mono text-mono-sm shrink-0" data-design-text-token="mono-sm">p. 3</span>
+                </div>
+                <p class="font-body text-body-sm text-on-surface-variant text-pretty" data-design-text-token="body-sm">
+                  &#34;RAG-Token model can predict each target token based on a different document, combining information across several passages.&#34;
+                </p>
+              </div>
+
+              <div class="bg-background border border-outline-variant rounded p-3 flex flex-col gap-gutter-xs">
+                <div class="flex items-center justify-between gap-gutter-xs">
+                  <span class="font-label text-label-md text-primary truncate" data-design-text-token="label-md">Lewis et al. (2020) — RAG</span>
+                  <span class="px-2 py-0.5 rounded bg-primary-container text-primary font-mono text-mono-sm shrink-0" data-design-text-token="mono-sm">p. 6</span>
+                </div>
+                <p class="font-body text-body-sm text-on-surface-variant text-pretty" data-design-text-token="body-sm">
+                  &#34;RAG-Sequence outperforms RAG-Token on Jeopardy question generation, while RAG-Token achieves higher diversity on MS-MARCO.&#34;
+                </p>
+              </div>
+            </div>
+          </article>
+
+        </section>
+
+        <!-- Chat Composer -->
+        <section class="max-w-3xl w-full mx-auto flex flex-col gap-gutter-xs pt-gutter-sm">
+          <form class="bg-surface border border-outline-variant focus-within:border-primary rounded-md p-3 shadow-sm flex flex-col gap-gutter-sm transition-colors duration-state-change">
+            <textarea rows="2" placeholder="Ask a research question about your selected papers..." class="w-full border-0 bg-transparent p-1 font-body text-body-md text-on-surface placeholder:text-on-surface-variant focus:ring-0 resize-none"></textarea>
+            <div class="flex items-center justify-between">
+              <button type="button" aria-label="Attach or select documents" class="inline-flex items-center gap-gutter-xs px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-md transition-colors duration-state-change">
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">attach_file</span>
+                <span data-design-text-token="label-md">Select Papers (3)</span>
+              </button>
+              <button type="submit" class="inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-2 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change">
+                <span data-design-text-token="label-lg">Send</span>
+                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_upward</span>
+              </button>
+            </div>
+          </form>
+          <p class="font-body text-body-sm text-on-surface-variant text-center" data-design-text-token="body-sm">
+            Answers are grounded strictly in the 3 selected documents. Verify critical claims against cited page numbers.
+          </p>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+
+</body></html>

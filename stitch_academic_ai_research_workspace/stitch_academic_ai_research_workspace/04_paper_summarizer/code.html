@@ -1,0 +1,380 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Summarizer — Research Paper Assistant</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'background': '#F8FAFC',
+        'on-background': '#172033',
+        'surface': '#FFFFFF',
+        'on-surface': '#172033',
+        'on-surface-variant': '#526075',
+        'surface-container-low': '#F1F5F9',
+        'surface-container': '#E2E8F0',
+        'primary': '#5455D6',
+        'on-primary': '#FFFFFF',
+        'primary-hover': '#4344C2',
+        'primary-container': '#EAF0FF',
+        'on-primary-container': '#172033',
+        'secondary': '#475569',
+        'on-secondary': '#FFFFFF',
+        'secondary-container': '#F1F5F9',
+        'on-secondary-container': '#172033',
+        'accent-violet': '#6D28D9',
+        'on-accent-violet': '#FFFFFF',
+        'accent-violet-container': '#F3E8FF',
+        'on-accent-violet-container': '#4C1D95',
+        'outline': '#CBD5E1',
+        'outline-variant': '#E2E8F0',
+        'success': '#059669',
+        'on-success': '#1C1C1C',
+        'success-container': '#ECFDF5',
+        'on-success-container': '#065F46',
+        'warning': '#D97706',
+        'on-warning': '#2A2A2A',
+        'warning-container': '#FFFBEB',
+        'on-warning-container': '#92400E',
+        'error': '#DC2626',
+        'on-error': '#FFFFFF',
+        'error-container': '#FEF2F2',
+        'on-error-container': '#991B1B',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '10px',
+        'md': '12px',
+        'lg': '14px',
+        'xl': '16px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '32px',
+      },
+      fontFamily: {
+        'display': ['"Plus Jakarta Sans"', 'sans-serif'],
+        'headline': ['"Plus Jakarta Sans"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['36px', { lineHeight: '44px', letterSpacing: '-0.75px', fontWeight: '700' }],
+        'display-lg-mobile': ['28px', { lineHeight: '36px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['26px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-md': ['20px', { lineHeight: '28px', letterSpacing: '-0.3px', fontWeight: '600' }],
+        'headline-sm': ['16px', { lineHeight: '24px', letterSpacing: '-0.15px', fontWeight: '600' }],
+        'title-md': ['15px', { lineHeight: '22px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-lg': ['15px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '21px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['13px', { lineHeight: '19px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-lg': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '14px', letterSpacing: '0.2px', fontWeight: '500' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '150ms',
+        'surface-enter': '200ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+  <div class="min-h-[1024px] flex bg-background" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+    <!-- Left Sidebar -->
+    <aside class="w-64 shrink-0 bg-surface border-r border-outline-variant flex flex-col justify-between min-h-[1024px] hidden lg:flex" data-stitch-vh="min-h-[1024px]===min-h-screen">
+      <div class="p-gutter-md flex flex-col gap-gutter-lg">
+        <div class="flex items-center justify-between px-1 pt-1">
+          <div class="flex items-center gap-gutter-sm">
+            <span class="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">science</span>
+            </span>
+            <span class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Research Assistant</span>
+          </div>
+          <button type="button" aria-label="Collapse sidebar" class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">dock_to_left</span>
+          </button>
+        </div>
+
+        <button type="button" class="w-full flex items-center justify-between px-3 py-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded transition-colors duration-state-change text-left">
+          <div class="flex flex-col min-w-0">
+            <span class="font-label text-label-lg text-on-surface truncate" data-design-text-token="label-lg">NLP &amp; Reasoning Lab</span>
+            <span class="font-label text-label-sm text-on-surface-variant" data-design-text-token="label-sm">48 papers · 4 collections</span>
+          </div>
+          <span class="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0" aria-hidden="true">unfold_more</span>
+        </button>
+
+        <nav aria-label="Primary" class="flex flex-col gap-gutter-xs">
+          <a href="../research-dashboard/ResearchDashboard.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">dashboard</span>
+            <span data-design-text-token="label-lg">Overview</span>
+          </a>
+          <a href="../research-library/ResearchLibrary.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">folder_open</span>
+            <span data-design-text-token="label-lg">Research Library</span>
+          </a>
+          <a href="../ai-research-chat/AiResearchChat.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">forum</span>
+            <span data-design-text-token="label-lg">AI Research Chat</span>
+          </a>
+          <a href="../paper-summarizer/PaperSummarizer.html" aria-current="page" class="flex items-center gap-gutter-sm px-3 py-2 rounded bg-primary-container text-primary font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">summarize</span>
+            <span data-design-text-token="label-lg">Paper Summarizer</span>
+          </a>
+          <a href="../paper-comparison/PaperComparison.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">compare_arrows</span>
+            <span data-design-text-token="label-lg">Paper Comparison</span>
+          </a>
+          <a href="../research-gap-analyzer/ResearchGapAnalyzer.html" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">troubleshoot</span>
+            <span data-design-text-token="label-lg">Research Gap Analyzer</span>
+          </a>
+          <a href="#" class="flex items-center gap-gutter-sm px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-lg transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">settings</span>
+            <span data-design-text-token="label-lg">Settings</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="p-gutter-md border-t border-outline-variant flex flex-col gap-gutter-sm">
+        <div class="flex items-center justify-between gap-gutter-sm px-2 py-1.5 rounded hover:bg-surface-container-low transition-colors duration-state-change cursor-pointer">
+          <div class="flex items-center gap-gutter-sm min-w-0">
+            <span class="w-8 h-8 rounded-full bg-primary-container text-primary font-label text-label-md flex items-center justify-center shrink-0" data-design-text-token="label-md">EV</span>
+            <div class="flex flex-col min-w-0">
+              <span class="font-label text-label-lg text-on-surface truncate" data-design-text-token="label-lg">Dr. Elena Vance</span>
+              <span class="font-label text-label-sm text-on-surface-variant truncate" data-design-text-token="label-sm">Academic Pro</span>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0" aria-hidden="true">more_horiz</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Column -->
+    <div class="flex-1 min-w-0 flex flex-col min-h-[1024px]" data-stitch-vh="min-h-[1024px]===min-h-screen">
+      <!-- Top Header -->
+      <header class="h-16 bg-surface border-b border-outline-variant px-gutter-lg lg:px-gutter-xl flex items-center justify-between gap-gutter-md sticky top-0 z-20">
+        <div class="flex items-center gap-gutter-sm min-w-0">
+          <button type="button" aria-label="Open navigation menu" class="lg:hidden p-2 rounded border border-outline-variant text-on-surface-variant hover:text-on-surface">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">menu</span>
+          </button>
+          <nav aria-label="Breadcrumb" class="flex items-center gap-gutter-xs">
+            <span class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">Workspace</span>
+            <span class="text-on-surface-variant">/</span>
+            <span class="font-title text-title-md text-on-surface" data-design-text-token="title-md">Paper Summarizer</span>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-gutter-sm">
+          <button type="button" class="hidden sm:flex items-center gap-gutter-md px-3 py-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded text-on-surface-variant transition-colors duration-state-change">
+            <span class="flex items-center gap-gutter-xs">
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">search</span>
+              <span class="font-body text-body-sm" data-design-text-token="body-sm">Search papers...</span>
+            </span>
+            <kbd class="font-mono text-mono-sm text-on-surface-variant bg-surface px-1.5 py-0.5 rounded-sm border border-outline-variant">⌘K</kbd>
+          </button>
+
+          <button data-component-id="button-icon" data-component-type="button" data-component-variant="icon" type="button" aria-label="Notifications" class="relative inline-flex items-center justify-center w-9 h-9 bg-surface hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface border border-outline-variant rounded transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">notifications</span>
+            <span class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+          </button>
+
+          <button type="button" aria-label="User profile menu" class="w-9 h-9 rounded-full bg-primary-container text-primary font-label text-label-md flex items-center justify-center border border-outline-variant">
+            <span data-design-text-token="label-md">EV</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="flex-1 p-gutter-lg lg:p-gutter-xl max-w-[1200px] w-full mx-auto flex flex-col gap-gutter-lg">
+
+        <!-- Page Header -->
+        <section class="flex flex-col sm:flex-row sm:items-end justify-between gap-gutter-md">
+          <div class="flex flex-col gap-gutter-xs">
+            <h1 class="font-headline text-headline-lg text-on-surface" data-design-text-token="headline-lg">Paper Summarizer</h1>
+            <p class="font-body text-body-lg text-on-surface-variant" data-design-text-token="body-lg">
+              Turn lengthy research papers into structured, understandable insights.
+            </p>
+          </div>
+          <div class="flex items-center gap-gutter-sm shrink-0">
+            <button data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">content_copy</span>
+              <span data-design-text-token="label-lg">Copy Summary</span>
+            </button>
+            <button data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">download</span>
+              <span data-design-text-token="label-lg">Export Markdown</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Input Selection Bar -->
+        <section class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col lg:flex-row lg:items-end justify-between gap-gutter-md shadow-sm">
+          <div class="flex-1 flex flex-col gap-gutter-xs">
+            <label for="summarizer-paper-select" class="font-label text-label-md text-on-surface" data-design-text-token="label-md">Select Research Paper</label>
+            <select id="summarizer-paper-select" class="w-full px-3 py-2.5 bg-background border border-outline-variant rounded font-body text-body-md text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none">
+              <option>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (lewis_2020_rag.pdf)</option>
+              <option>Attention Is All You Need (vaswani_2017_transformers.pdf)</option>
+              <option>Chain-of-Thought Prompting Elicits Reasoning in LLMs (wei_2022_cot_prompting.pdf)</option>
+            </select>
+            <div class="flex flex-wrap items-center gap-gutter-sm pt-1">
+              <span class="font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">19 pages · 3.8 MB</span>
+              <span class="text-on-surface-variant">·</span>
+              <span class="font-body text-body-sm text-on-surface-variant" data-design-text-token="body-sm">Authors: Patrick Lewis, Ethan Perez, et al. (NeurIPS 2020)</span>
+            </div>
+          </div>
+
+          <button data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">auto_awesome</span>
+            <span data-design-text-token="label-lg">Generate Summary</span>
+          </button>
+        </section>
+
+        <!-- Structured Summary Output (2-Column Editorial Layout) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter-lg items-start">
+
+          <!-- Main 8-Section Academic Brief (2 columns) -->
+          <article class="lg:col-span-2 bg-surface border border-outline-variant rounded-md p-gutter-xl flex flex-col gap-gutter-lg shadow-sm">
+            <div class="flex flex-col gap-gutter-xs pb-gutter-md border-b border-outline-variant">
+              <h2 class="font-headline text-headline-md text-on-surface" data-design-text-token="headline-md">Abstract Overview</h2>
+              <p class="font-body text-body-lg text-on-surface text-pretty max-w-prose" data-design-text-token="body-lg">
+                This paper introduces Retrieval-Augmented Generation (RAG), a hybrid architecture that combines pre-trained parametric sequence-to-sequence language models (BART) with a non-parametric dense vector index of Wikipedia accessed via Dense Passage Retrieval (DPR).
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg pb-gutter-md border-b border-outline-variant">
+              <div class="flex flex-col gap-gutter-xs">
+                <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Research Objectives</h3>
+                <p class="font-body text-body-md text-on-surface-variant text-pretty" data-design-text-token="body-md">
+                  Enable general-purpose language models to access, update, and cite external factual knowledge without full model retraining.
+                </p>
+              </div>
+              <div class="flex flex-col gap-gutter-xs">
+                <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Problem Statement</h3>
+                <p class="font-body text-body-md text-on-surface-variant text-pretty" data-design-text-token="body-md">
+                  Purely parametric LLMs store knowledge implicitly in weights, making provenance opaque, factual updates expensive, and hallucinations frequent.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-gutter-xs pb-gutter-md border-b border-outline-variant">
+              <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Methodology</h3>
+              <p class="font-body text-body-md text-on-surface text-pretty max-w-prose" data-design-text-token="body-md">
+                A bi-encoder retriever (DPR) encodes queries and 21M Wikipedia passages into MIPS-indexed vectors. The top-K retrieved documents are concatenated with the input and fed into a BART-large generator, trained end-to-end by marginalizing over latent documents at either the sequence level (RAG-Sequence) or token level (RAG-Token).
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-gutter-xs pb-gutter-md border-b border-outline-variant">
+              <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Key Findings</h3>
+              <ul class="list-disc pl-5 flex flex-col gap-gutter-xs font-body text-body-md text-on-surface max-w-prose">
+                <li data-design-text-token="body-md">Sets state-of-the-art accuracy across Natural Questions (44.5 EM), WebQuestions, and CuratedTrec, outperforming parametric-only T5-11B.</li>
+                <li data-design-text-token="body-md">Generates more specific, diverse, and factually grounded text than BART on Jeopardy question generation and MS-MARCO.</li>
+                <li data-design-text-token="body-md">Swapping the non-parametric Wikipedia index updates world knowledge immediately with zero weight updates.</li>
+              </ul>
+            </div>
+
+            <div class="flex flex-col gap-gutter-xs pb-gutter-md border-b border-outline-variant">
+              <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Results and Discussion</h3>
+              <p class="font-body text-body-md text-on-surface text-pretty max-w-prose" data-design-text-token="body-md">
+                Human evaluators preferred RAG outputs over BART in 42.7% of factuality comparisons (vs. 7.1% for BART). RAG-Sequence excels at single-fact extraction, whereas RAG-Token synthesizes multi-passage answers more effectively.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg">
+              <div class="flex flex-col gap-gutter-xs">
+                <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Limitations</h3>
+                <p class="font-body text-body-md text-on-surface-variant text-pretty" data-design-text-token="body-md">
+                  Retrieval latency scales with index size, and the generator can still ignore retrieved context when parametric priors are strong.
+                </p>
+              </div>
+              <div class="flex flex-col gap-gutter-xs">
+                <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Conclusion</h3>
+                <p class="font-body text-body-md text-on-surface-variant text-pretty" data-design-text-token="body-md">
+                  Hybrid parametric and non-parametric memory establishes a practical foundation for verifiable, updatable knowledge-intensive NLP systems.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Right Sidebar: Keywords, Key Insight Cards, Source References -->
+          <aside class="flex flex-col gap-gutter-md">
+            <!-- Keywords -->
+            <div class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-sm">
+              <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Important Keywords</h3>
+              <div class="flex flex-wrap gap-gutter-xs">
+                <span class="px-2.5 py-1 rounded-full bg-primary-container text-primary font-label text-label-sm" data-design-text-token="label-sm">RAG</span>
+                <span class="px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant text-on-surface font-label text-label-sm" data-design-text-token="label-sm">Dense Passage Retrieval</span>
+                <span class="px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant text-on-surface font-label text-label-sm" data-design-text-token="label-sm">Non-Parametric Memory</span>
+                <span class="px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant text-on-surface font-label text-label-sm" data-design-text-token="label-sm">Open-Domain QA</span>
+                <span class="px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant text-on-surface font-label text-label-sm" data-design-text-token="label-sm">BART-large</span>
+              </div>
+            </div>
+
+            <!-- Highlighted Insight Cards -->
+            <div class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-sm">
+              <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Key Insight Highlights</h3>
+              <div class="bg-primary-container rounded p-3 flex flex-col gap-gutter-xs">
+                <span class="font-label text-label-sm text-primary" data-design-text-token="label-sm">Zero-Retraining Updates</span>
+                <p class="font-body text-body-sm text-on-primary-container" data-design-text-token="body-sm">Replacing the 2016 Wikipedia index with 2018 Wikipedia raised temporal QA accuracy from 12% to 68% without retraining.</p>
+              </div>
+              <div class="bg-accent-violet-container rounded p-3 flex flex-col gap-gutter-xs">
+                <span class="font-label text-label-sm text-on-accent-violet-container" data-design-text-token="label-sm">Factuality Gain</span>
+                <p class="font-body text-body-sm text-on-accent-violet-container" data-design-text-token="body-sm">42.7% human preference for factual accuracy over pure-parametric BART baseline.</p>
+              </div>
+            </div>
+
+            <!-- Source References -->
+            <div class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-sm">
+              <h3 class="font-headline text-headline-sm text-on-surface" data-design-text-token="headline-sm">Source References</h3>
+              <ul class="flex flex-col gap-gutter-xs">
+                <li class="flex items-center justify-between py-1.5 border-b border-outline-variant">
+                  <span class="font-body text-body-sm text-on-surface" data-design-text-token="body-sm">Model Formulations</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container-low font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">p. 2–3</span>
+                </li>
+                <li class="flex items-center justify-between py-1.5 border-b border-outline-variant">
+                  <span class="font-body text-body-sm text-on-surface" data-design-text-token="body-sm">Open-Domain QA Benchmarks</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container-low font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">p. 5–6</span>
+                </li>
+                <li class="flex items-center justify-between py-1.5">
+                  <span class="font-body text-body-sm text-on-surface" data-design-text-token="body-sm">Index Hot-Swap Ablation</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container-low font-mono text-mono-sm text-on-surface-variant" data-design-text-token="mono-sm">p. 8</span>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+
+</body></html>
