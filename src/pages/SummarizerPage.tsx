@@ -18,21 +18,6 @@ export const SummarizerPage: React.FC = () => {
     }
   }, [papers]);
 
-  useEffect(() => {
-    if (selectedPaperId) {
-      setIsGenerating(true);
-      setIsProcessing(true);
-      getPaperSummary(selectedPaperId)
-        .then(data => {
-          setSummary(data);
-        })
-        .finally(() => {
-          setIsGenerating(false);
-          setIsProcessing(false);
-        });
-    }
-  }, [selectedPaperId]);
-
   const handleGenerate = () => {
     if (!selectedPaperId || busy) return;
     setIsGenerating(true);
@@ -142,7 +127,10 @@ ${summary.conclusion}
             id="summarizer-paper-select"
             disabled={busy}
             value={selectedPaperId}
-            onChange={e => setSelectedPaperId(e.target.value)}
+            onChange={e => {
+              setSelectedPaperId(e.target.value);
+              setSummary(null);
+            }}
             className="w-full px-3 py-2.5 bg-background border border-outline-variant rounded font-body text-body-md text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {papers.map(p => (
@@ -311,7 +299,28 @@ ${summary.conclusion}
             </div>
           </aside>
         </div>
-      ) : null}
+      ) : (
+        <section className="bg-surface border border-outline-variant rounded-md p-gutter-xl flex flex-col items-center justify-center gap-gutter-md text-center py-16 shadow-xs animate-in fade-in duration-200">
+          <span className="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center">
+            <span className="material-symbols-outlined text-[26px]">auto_awesome</span>
+          </span>
+          <div className="flex flex-col gap-gutter-xs max-w-md">
+            <h2 className="font-headline text-headline-sm text-on-surface">Ready to summarize paper</h2>
+            <p className="font-body text-body-sm text-on-surface-variant">
+              Click <strong className="text-on-surface font-semibold">Generate Summary</strong> above to synthesize a structured 8-part academic brief with verified page citations using Gemini.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={busy || !selectedPaperId}
+            className="inline-flex items-center gap-gutter-sm px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-md transition-colors shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
+            <span>Generate Summary</span>
+          </button>
+        </section>
+      )}
     </main>
   );
 };
