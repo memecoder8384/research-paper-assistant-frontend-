@@ -4,13 +4,22 @@ import { ChatMessage } from '../types';
 import { sendChatMessage } from '../services/api';
 
 export const ChatPage: React.FC = () => {
-  const { papers, selectedPapersForChat, togglePaperSelectionForChat, showToast } = useWorkspace();
+  const {
+    papers,
+    selectedPapersForChat,
+    togglePaperSelectionForChat,
+    showToast,
+    isProcessing,
+    setIsProcessing,
+  } = useWorkspace();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPaperPicker, setShowPaperPicker] = useState(false);
   const [expandedCitations, setExpandedCitations] = useState<Record<string, boolean>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const busy = isLoading || isProcessing;
 
   const toggleCitations = (messageId: string) => {
     setExpandedCitations(prev => ({
@@ -25,7 +34,7 @@ export const ChatPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim() || isLoading) return;
+    if (!inputText.trim() || busy) return;
 
     if (selectedPapersForChat.length === 0) {
       showToast('Please select at least one paper to ground the AI response.', 'warning');
@@ -42,6 +51,7 @@ export const ChatPage: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsLoading(true);
+    setIsProcessing(true);
 
     try {
       const assistantMessage = await sendChatMessage(userMessage.content, selectedPapersForChat, messages);
@@ -50,14 +60,17 @@ export const ChatPage: React.FC = () => {
       showToast('Error communicating with research assistant.', 'error');
     } finally {
       setIsLoading(false);
+      setIsProcessing(false);
     }
   };
 
   const handlePromptClick = (prompt: string) => {
+    if (busy) return;
     setInputText(prompt);
   };
 
   const handleNewConversation = () => {
+    if (busy) return;
     setMessages([]);
     showToast('New conversation started.', 'info');
   };
@@ -73,8 +86,9 @@ export const ChatPage: React.FC = () => {
           <div className="relative flex items-center gap-gutter-xs">
             <button
               type="button"
+              disabled={busy}
               onClick={() => setShowPaperPicker(!showPaperPicker)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-surface hover:bg-surface-container-low border border-outline-variant rounded font-body text-body-sm text-on-surface transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 bg-surface hover:bg-surface-container-low border border-outline-variant rounded font-body text-body-sm text-on-surface transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span>Active Context: {selectedPapersForChat.length} Papers</span>
               <span className="material-symbols-outlined text-[16px] text-on-surface-variant">arrow_drop_down</span>
@@ -93,13 +107,16 @@ export const ChatPage: React.FC = () => {
                     return (
                       <label
                         key={p.id}
-                        className="flex items-center gap-2.5 p-1.5 rounded hover:bg-surface-container-low cursor-pointer text-xs"
+                        className={`flex items-center gap-2.5 p-1.5 rounded hover:bg-surface-container-low cursor-pointer text-xs ${
+                          busy ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+                        }`}
                       >
                         <input
                           type="checkbox"
+                          disabled={busy}
                           checked={isSelected}
                           onChange={() => togglePaperSelectionForChat(p.id)}
-                          className="rounded border-outline text-primary focus:ring-primary"
+                          className="rounded border-outline text-primary focus:ring-primary disabled:opacity-50"
                         />
                         <span className="truncate font-body text-on-surface">{p.title}</span>
                       </label>
@@ -109,8 +126,9 @@ export const ChatPage: React.FC = () => {
                 <div className="pt-2 border-t border-outline-variant flex justify-end">
                   <button
                     type="button"
+                    disabled={busy}
                     onClick={() => setShowPaperPicker(false)}
-                    className="px-3 py-1 bg-primary text-on-primary rounded text-xs font-label"
+                    className="px-3 py-1 bg-primary text-on-primary rounded text-xs font-label disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Done
                   </button>
@@ -122,8 +140,9 @@ export const ChatPage: React.FC = () => {
 
         <button
           type="button"
+          disabled={busy}
           onClick={handleNewConversation}
-          className="inline-flex items-center justify-center gap-gutter-xs px-3 py-1.5 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-md transition-colors duration-state-change shrink-0 shadow-2xs"
+          className="inline-flex items-center justify-center gap-gutter-xs px-3 py-1.5 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-md transition-colors duration-state-change shrink-0 shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[16px]" aria-hidden="true">add</span>
           <span>New Conversation</span>
@@ -146,9 +165,10 @@ export const ChatPage: React.FC = () => {
                 <span className="truncate max-w-[220px]">{paper.title}</span>
                 <button
                   type="button"
+                  disabled={busy}
                   aria-label={`Remove ${paper.title}`}
                   onClick={() => togglePaperSelectionForChat(paper.id)}
-                  className="text-on-surface-variant hover:text-on-surface"
+                  className="text-on-surface-variant hover:text-on-surface disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <span className="material-symbols-outlined text-[14px]">close</span>
                 </button>
@@ -174,29 +194,33 @@ export const ChatPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-gutter-sm">
               <button
                 type="button"
+                disabled={busy}
                 onClick={() => handlePromptClick('Explain the methodology used in these papers.')}
-                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface"
+                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 "Explain the methodology used in these papers."
               </button>
               <button
                 type="button"
+                disabled={busy}
                 onClick={() => handlePromptClick('What are the main findings and empirical benchmarks?')}
-                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface"
+                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 "What are the main findings?"
               </button>
               <button
                 type="button"
+                disabled={busy}
                 onClick={() => handlePromptClick('Identify the key limitations and trade-offs of this research.')}
-                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface"
+                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 "Identify the limitations of this research."
               </button>
               <button
                 type="button"
+                disabled={busy}
                 onClick={() => handlePromptClick('Compare the architectural conclusions of the selected papers.')}
-                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface"
+                className="text-left px-3 py-2.5 rounded border border-outline-variant bg-background hover:border-primary hover:bg-primary-container/30 transition-colors duration-state-change font-body text-body-sm text-on-surface disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 "Compare the conclusions of selected papers."
               </button>
@@ -333,6 +357,7 @@ export const ChatPage: React.FC = () => {
         >
           <textarea
             rows={2}
+            disabled={busy}
             value={inputText}
             onChange={e => setInputText(e.target.value)}
             onKeyDown={e => {
@@ -341,25 +366,26 @@ export const ChatPage: React.FC = () => {
                 handleSubmit(e);
               }
             }}
-            placeholder="Ask a research question about your selected papers..."
-            className="w-full border-0 bg-transparent p-1 font-body text-body-md text-on-surface placeholder:text-on-surface-variant focus:ring-0 resize-none outline-none"
+            placeholder={busy ? "Generating response..." : "Ask a research question about your selected papers..."}
+            className="w-full border-0 bg-transparent p-1 font-body text-body-md text-on-surface placeholder:text-on-surface-variant focus:ring-0 resize-none outline-none disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <div className="flex items-center justify-between">
             <button
               type="button"
+              disabled={busy}
               onClick={() => setShowPaperPicker(true)}
               aria-label="Attach or select documents"
-              className="inline-flex items-center gap-gutter-xs px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-md transition-colors duration-state-change"
+              className="inline-flex items-center gap-gutter-xs px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label text-label-md transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined text-[18px]" aria-hidden="true">attach_file</span>
               <span>Select Papers ({selectedPapersForChat.length})</span>
             </button>
             <button
               type="submit"
-              disabled={isLoading || !inputText.trim()}
+              disabled={busy || !inputText.trim()}
               className={`inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-2 rounded font-label text-label-lg transition-colors duration-state-change ${
-                !inputText.trim() || isLoading
-                  ? 'bg-surface-container text-on-surface-variant cursor-not-allowed'
+                !inputText.trim() || busy
+                  ? 'bg-surface-container text-on-surface-variant cursor-not-allowed opacity-50'
                   : 'bg-primary hover:bg-primary-hover text-on-primary shadow-xs'
               }`}
             >

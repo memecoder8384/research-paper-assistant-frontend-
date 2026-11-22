@@ -4,10 +4,12 @@ import { PaperSummary } from '../types';
 import { getPaperSummary } from '../services/api';
 
 export const SummarizerPage: React.FC = () => {
-  const { papers, showToast } = useWorkspace();
+  const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
   const [selectedPaperId, setSelectedPaperId] = useState<string>('');
   const [summary, setSummary] = useState<PaperSummary | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const busy = isGenerating || isProcessing;
 
   useEffect(() => {
     if (papers.length > 0 && (!selectedPaperId || !papers.some(p => p.id === selectedPaperId))) {
@@ -18,19 +20,22 @@ export const SummarizerPage: React.FC = () => {
   useEffect(() => {
     if (selectedPaperId) {
       setIsGenerating(true);
+      setIsProcessing(true);
       getPaperSummary(selectedPaperId)
         .then(data => {
           setSummary(data);
         })
         .finally(() => {
           setIsGenerating(false);
+          setIsProcessing(false);
         });
     }
   }, [selectedPaperId]);
 
   const handleGenerate = () => {
-    if (!selectedPaperId) return;
+    if (!selectedPaperId || busy) return;
     setIsGenerating(true);
+    setIsProcessing(true);
     showToast('Synthesizing academic brief with Gemini...', 'info');
     getPaperSummary(selectedPaperId)
       .then(data => {
@@ -42,6 +47,7 @@ export const SummarizerPage: React.FC = () => {
       })
       .finally(() => {
         setIsGenerating(false);
+        setIsProcessing(false);
       });
   };
 
@@ -106,16 +112,18 @@ ${summary.conclusion}
         <div className="flex items-center gap-gutter-sm shrink-0">
           <button
             type="button"
+            disabled={busy || !summary}
             onClick={handleCopySummary}
-            className="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shadow-2xs"
+            className="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">content_copy</span>
             <span>Copy Summary</span>
           </button>
           <button
             type="button"
+            disabled={busy || !summary}
             onClick={handleExportMarkdown}
-            className="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shadow-2xs"
+            className="inline-flex items-center gap-gutter-xs px-3 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">download</span>
             <span>Export Markdown</span>
@@ -131,9 +139,10 @@ ${summary.conclusion}
           </label>
           <select
             id="summarizer-paper-select"
+            disabled={busy}
             value={selectedPaperId}
             onChange={e => setSelectedPaperId(e.target.value)}
-            className="w-full px-3 py-2.5 bg-background border border-outline-variant rounded font-body text-body-md text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none"
+            className="w-full px-3 py-2.5 bg-background border border-outline-variant rounded font-body text-body-md text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {papers.map(p => (
               <option key={p.id} value={p.id}>
@@ -155,13 +164,13 @@ ${summary.conclusion}
         <button
           type="button"
           onClick={handleGenerate}
-          disabled={isGenerating}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs"
+          disabled={busy}
+          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className={`material-symbols-outlined text-[18px] ${isGenerating ? 'animate-spin' : ''}`} aria-hidden="true">
-            {isGenerating ? 'sync' : 'auto_awesome'}
+          <span className={`material-symbols-outlined text-[18px] ${busy ? 'animate-spin' : ''}`} aria-hidden="true">
+            {busy ? 'sync' : 'auto_awesome'}
           </span>
-          <span>{isGenerating ? 'Generating...' : 'Generate Summary'}</span>
+          <span>{busy ? 'Generating...' : 'Generate Summary'}</span>
         </button>
       </section>
 

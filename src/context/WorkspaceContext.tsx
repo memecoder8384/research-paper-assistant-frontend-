@@ -18,6 +18,8 @@ interface WorkspaceContextType {
   isUploadModalOpen: boolean;
   toasts: ToastInfo[];
   backendConnected: boolean;
+  isProcessing: boolean;
+  setIsProcessing: (loading: boolean) => void;
   setSearchQuery: (q: string) => void;
   setIsSearchModalOpen: (open: boolean) => void;
   setIsUploadModalOpen: (open: boolean) => void;
@@ -42,6 +44,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastInfo[]>([]);
   const [backendConnected, setBackendConnected] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     testBackendConnection().then(res => {
@@ -145,6 +148,8 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         isUploadModalOpen,
         toasts,
         backendConnected,
+        isProcessing,
+        setIsProcessing,
         setSearchQuery,
         setIsSearchModalOpen,
         setIsUploadModalOpen,

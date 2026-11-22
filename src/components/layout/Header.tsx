@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const location = useLocation();
-  const { setIsSearchModalOpen, backendConnected } = useWorkspace();
+  const { setIsSearchModalOpen, backendConnected, isProcessing } = useWorkspace();
   const [showNotificationMenu, setShowNotificationMenu] = useState(false);
 
   const getPageTitle = (pathname: string) => {
@@ -39,8 +39,9 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         <button
           type="button"
           aria-label="Open navigation menu"
+          disabled={isProcessing}
           onClick={onToggleSidebar}
-          className="lg:hidden p-2 rounded border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors"
+          className="lg:hidden p-2 rounded border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">menu</span>
         </button>
@@ -58,8 +59,9 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         {/* Search trigger button (⌘K) */}
         <button
           type="button"
+          disabled={isProcessing}
           onClick={() => setIsSearchModalOpen(true)}
-          className="hidden sm:flex items-center gap-gutter-md px-3 py-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded text-on-surface-variant transition-colors duration-state-change group"
+          className="hidden sm:flex items-center gap-gutter-md px-3 py-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded text-on-surface-variant transition-colors duration-state-change group disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="flex items-center gap-gutter-xs">
             <span className="material-symbols-outlined text-[16px] group-hover:text-primary transition-colors" aria-hidden="true">
@@ -75,7 +77,12 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         {/* Backend status pill */}
         <Link
           to="/settings"
-          className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-label border border-outline-variant bg-surface hover:bg-surface-container-low transition-colors"
+          onClick={(e) => {
+            if (isProcessing) e.preventDefault();
+          }}
+          className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-label border border-outline-variant bg-surface hover:bg-surface-container-low transition-colors ${
+            isProcessing ? 'pointer-events-none opacity-60 cursor-not-allowed' : ''
+          }`}
           title={backendConnected ? 'Connected to external backend' : 'Running in frontend mock mode (ready for backend connection)'}
         >
           <span className={`w-2 h-2 rounded-full ${backendConnected ? 'bg-success animate-pulse' : 'bg-primary'}`}></span>
@@ -89,8 +96,9 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           <button
             type="button"
             aria-label="Notifications"
+            disabled={isProcessing}
             onClick={() => setShowNotificationMenu(!showNotificationMenu)}
-            className="relative inline-flex items-center justify-center w-9 h-9 bg-surface hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface border border-outline-variant rounded transition-colors duration-state-change focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="relative inline-flex items-center justify-center w-9 h-9 bg-surface hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface border border-outline-variant rounded transition-colors duration-state-change focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">notifications</span>
             <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary ring-2 ring-surface" aria-hidden="true"></span>

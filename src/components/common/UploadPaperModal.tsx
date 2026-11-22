@@ -3,17 +3,19 @@ import { useWorkspace } from '../../context/WorkspaceContext';
 import { uploadPaperFile } from '../../services/api';
 
 export const UploadPaperModal: React.FC = () => {
-  const { isUploadModalOpen, setIsUploadModalOpen, addPaper, showToast } = useWorkspace();
+  const { isUploadModalOpen, setIsUploadModalOpen, addPaper, showToast, isProcessing, setIsProcessing } = useWorkspace();
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const busy = uploading || isProcessing;
+
   if (!isUploadModalOpen) return null;
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    setIsDragging(true);
+    if (!busy) setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
@@ -22,6 +24,7 @@ export const UploadPaperModal: React.FC = () => {
   };
 
   const processFile = async (file: File) => {
+    if (busy) return;
     if (!file.name.toLowerCase().endsWith('.pdf')) {
       showToast('Please upload a PDF document.', 'warning');
       return;
@@ -32,6 +35,7 @@ export const UploadPaperModal: React.FC = () => {
     }
 
     setUploading(true);
+    setIsProcessing(true);
     setUploadProgress(15);
 
     const progressTimer = setInterval(() => {
@@ -51,12 +55,14 @@ export const UploadPaperModal: React.FC = () => {
       setTimeout(() => {
         addPaper(newPaper);
         setUploading(false);
+        setIsProcessing(false);
         setUploadProgress(0);
         setIsUploadModalOpen(false);
       }, 400);
     } catch (err) {
       clearInterval(progressTimer);
       setUploading(false);
+      setIsProcessing(false);
       showToast('Failed to upload paper. Please try again.', 'error');
     }
   };
@@ -64,13 +70,13 @@ export const UploadPaperModal: React.FC = () => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    if (!busy && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       processFile(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
+    if (!busy && e.target.files && e.target.files.length > 0) {
       processFile(e.target.files[0]);
     }
   };
@@ -80,7 +86,7 @@ export const UploadPaperModal: React.FC = () => {
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
-        onClick={() => !uploading && setIsUploadModalOpen(false)}
+        onClick={() => !busy && setIsUploadModalOpen(false)}
       />
 
       {/* Modal Dialog */}
@@ -93,7 +99,7 @@ export const UploadPaperModal: React.FC = () => {
             </span>
             <h2 className="font-headline text-headline-sm text-on-surface">Upload Research Paper</h2>
           </div>
-          {!uploading && (
+          {!busy && (
             <button
               onClick={() => setIsUploadModalOpen(false)}
               className="p-1.5 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors"
@@ -108,12 +114,13 @@ export const UploadPaperModal: React.FC = () => {
           <input
             ref={fileInputRef}
             type="file"
+            disabled={busy}
             accept=".pdf"
             className="hidden"
             onChange={handleFileInputChange}
           />
 
-          {uploading ? (
+          {busy ? (
             <div className="py-8 flex flex-col items-center justify-center gap-4 text-center">
               <span className="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center animate-spin">
                 <span className="material-symbols-outlined text-[24px]">sync</span>
@@ -154,7 +161,8 @@ export const UploadPaperModal: React.FC = () => {
               </div>
               <button
                 type="button"
-                className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-md transition-colors"
+                disabled={busy}
+                className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="material-symbols-outlined text-[16px]">folder_open</span>
                 <span>Select from Computer</span>

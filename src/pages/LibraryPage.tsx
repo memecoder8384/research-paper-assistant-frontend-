@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
 
 export const LibraryPage: React.FC = () => {
-  const { papers, setIsUploadModalOpen, retryPaperIndexing, deletePaper, showToast } = useWorkspace();
+  const { papers, setIsUploadModalOpen, retryPaperIndexing, deletePaper, showToast, isProcessing } = useWorkspace();
   const [activeTab, setActiveTab] = useState<'documents' | 'loading' | 'empty'>('documents');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -59,8 +59,9 @@ export const LibraryPage: React.FC = () => {
         </div>
         <button
           type="button"
+          disabled={isProcessing}
           onClick={() => setIsUploadModalOpen(true)}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs"
+          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[18px]" aria-hidden="true">upload_file</span>
           <span>Upload Paper</span>
@@ -70,8 +71,10 @@ export const LibraryPage: React.FC = () => {
       {/* Compact Drag-and-Drop Upload Section */}
       <section
         aria-label="Upload research papers"
-        onClick={() => setIsUploadModalOpen(true)}
-        className="bg-surface border-2 border-dashed border-outline hover:border-primary rounded-lg p-gutter-lg flex flex-col sm:flex-row items-center justify-between gap-gutter-md transition-colors duration-state-change cursor-pointer group"
+        onClick={() => !isProcessing && setIsUploadModalOpen(true)}
+        className={`bg-surface border-2 border-dashed border-outline hover:border-primary rounded-lg p-gutter-lg flex flex-col sm:flex-row items-center justify-between gap-gutter-md transition-colors duration-state-change cursor-pointer group ${
+          isProcessing ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''
+        }`}
       >
         <div className="flex items-center gap-gutter-md">
           <span className="w-11 h-11 rounded bg-primary-container text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -88,7 +91,8 @@ export const LibraryPage: React.FC = () => {
         </div>
         <button
           type="button"
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shrink-0"
+          disabled={isProcessing}
+          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span>Browse Files</span>
         </button>
@@ -104,10 +108,11 @@ export const LibraryPage: React.FC = () => {
             </span>
             <input
               type="search"
+              disabled={isProcessing}
               value={searchFilter}
               onChange={e => setSearchFilter(e.target.value)}
               placeholder="Search papers by title, author or filename..."
-              className="w-full pl-9 pr-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-md text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none"
+              className="w-full pl-9 pr-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-md text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -115,9 +120,10 @@ export const LibraryPage: React.FC = () => {
           <div className="flex flex-wrap items-center gap-gutter-sm">
             <select
               aria-label="Filter by status"
+              disabled={isProcessing}
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
-              className="px-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none"
+              className="px-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="all">Status: All ({papers.length})</option>
               <option value="indexed">Indexed ({papers.filter(p => p.status === 'indexed').length})</option>
@@ -127,9 +133,10 @@ export const LibraryPage: React.FC = () => {
 
             <select
               aria-label="Sort papers"
+              disabled={isProcessing}
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="px-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none"
+              className="px-3 py-2 bg-surface border border-outline-variant rounded font-body text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-container focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="newest">Sort: Upload Date (Newest)</option>
               <option value="title">Sort: Title (A–Z)</option>
@@ -140,8 +147,9 @@ export const LibraryPage: React.FC = () => {
               <button
                 type="button"
                 role="tab"
+                disabled={isProcessing}
                 onClick={() => setActiveTab('documents')}
-                className={`px-2.5 py-1 rounded-sm font-label text-label-sm transition-colors ${
+                className={`px-2.5 py-1 rounded-sm font-label text-label-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeTab === 'documents'
                     ? 'bg-surface text-on-surface shadow-xs font-semibold'
                     : 'text-on-surface-variant hover:text-on-surface'
@@ -152,8 +160,9 @@ export const LibraryPage: React.FC = () => {
               <button
                 type="button"
                 role="tab"
+                disabled={isProcessing}
                 onClick={() => setActiveTab('loading')}
-                className={`px-2.5 py-1 rounded-sm font-label text-label-sm transition-colors ${
+                className={`px-2.5 py-1 rounded-sm font-label text-label-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeTab === 'loading'
                     ? 'bg-surface text-on-surface shadow-xs font-semibold'
                     : 'text-on-surface-variant hover:text-on-surface'
@@ -164,8 +173,9 @@ export const LibraryPage: React.FC = () => {
               <button
                 type="button"
                 role="tab"
+                disabled={isProcessing}
                 onClick={() => setActiveTab('empty')}
-                className={`px-2.5 py-1 rounded-sm font-label text-label-sm transition-colors ${
+                className={`px-2.5 py-1 rounded-sm font-label text-label-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeTab === 'empty'
                     ? 'bg-surface text-on-surface shadow-xs font-semibold'
                     : 'text-on-surface-variant hover:text-on-surface'
@@ -183,8 +193,9 @@ export const LibraryPage: React.FC = () => {
             <button
               key={cat.val}
               type="button"
+              disabled={isProcessing}
               onClick={() => setSelectedCategory(cat.val)}
-              className={`px-3 py-1 rounded-full font-label text-label-md transition-colors ${
+              className={`px-3 py-1 rounded-full font-label text-label-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 selectedCategory === cat.val
                   ? 'bg-primary-container text-primary font-semibold'
                   : 'bg-surface border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low'
@@ -210,8 +221,9 @@ export const LibraryPage: React.FC = () => {
               </div>
               <button
                 type="button"
+                disabled={isProcessing}
                 onClick={() => retryPaperIndexing(failedPaper.id)}
-                className="px-3 py-1 rounded bg-surface border border-outline-variant text-on-surface font-label text-label-md hover:bg-surface-container-low shrink-0 transition-colors shadow-2xs"
+                className="px-3 py-1 rounded bg-surface border border-outline-variant text-on-surface font-label text-label-md hover:bg-surface-container-low shrink-0 transition-colors shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Retry Indexing
               </button>
@@ -296,8 +308,9 @@ export const LibraryPage: React.FC = () => {
                       <button
                         type="button"
                         aria-label="Paper actions"
+                        disabled={isProcessing}
                         onClick={() => setActiveMenuPaperId(activeMenuPaperId === paper.id ? null : paper.id)}
-                        className="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface"
+                        className="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <span className="material-symbols-outlined text-[18px]" aria-hidden="true">more_horiz</span>
                       </button>

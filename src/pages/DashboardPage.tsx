@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWorkspace } from '../context/WorkspaceContext';
 
 export const DashboardPage: React.FC = () => {
-  const { papers, stats, setIsUploadModalOpen, backendConnected } = useWorkspace();
+  const { papers, stats, setIsUploadModalOpen, backendConnected, isProcessing } = useWorkspace();
   const navigate = useNavigate();
 
   const recentPapers = papers.slice(0, 4);
@@ -29,8 +29,9 @@ export const DashboardPage: React.FC = () => {
         <div className="flex flex-wrap items-center gap-gutter-sm shrink-0">
           <button
             type="button"
+            disabled={isProcessing}
             onClick={() => navigate('/chat')}
-            className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change"
+            className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-surface hover:bg-surface-container-low text-on-surface border border-outline-variant rounded font-label text-label-lg transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">forum</span>
             <span>Start Research Chat</span>
@@ -38,8 +39,9 @@ export const DashboardPage: React.FC = () => {
 
           <button
             type="button"
+            disabled={isProcessing}
             onClick={() => setIsUploadModalOpen(true)}
-            className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shadow-xs"
+            className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">upload_file</span>
             <span>Upload Research Paper</span>
@@ -188,15 +190,17 @@ export const DashboardPage: React.FC = () => {
                       <>
                         <button
                           type="button"
+                          disabled={isProcessing}
                           onClick={() => navigate('/summarizer')}
-                          className="px-2.5 py-1.5 rounded hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label text-label-md transition-colors duration-state-change"
+                          className="px-2.5 py-1.5 rounded hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label text-label-md transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           Summarize
                         </button>
                         <button
                           type="button"
+                          disabled={isProcessing}
                           onClick={() => navigate('/chat')}
-                          className="px-2.5 py-1.5 rounded bg-primary-container text-primary hover:bg-primary hover:text-on-primary font-label text-label-md transition-colors duration-state-change"
+                          className="px-2.5 py-1.5 rounded bg-primary-container text-primary hover:bg-primary hover:text-on-primary font-label text-label-md transition-colors duration-state-change disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           Chat
                         </button>
@@ -205,15 +209,16 @@ export const DashboardPage: React.FC = () => {
                       <button
                         type="button"
                         disabled
-                        className="px-2.5 py-1.5 rounded text-on-surface-variant font-label text-label-md cursor-not-allowed"
+                        className="px-2.5 py-1.5 rounded text-on-surface-variant font-label text-label-md cursor-not-allowed opacity-50"
                       >
                         Indexing...
                       </button>
                     ) : (
                       <button
                         type="button"
+                        disabled={isProcessing}
                         onClick={() => navigate('/library')}
-                        className="px-2.5 py-1.5 rounded text-error hover:bg-error-container font-label text-label-md"
+                        className="px-2.5 py-1.5 rounded text-error hover:bg-error-container font-label text-label-md disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Details
                       </button>

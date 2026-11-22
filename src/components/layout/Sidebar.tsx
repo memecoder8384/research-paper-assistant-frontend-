@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { useWorkspace } from '../../context/WorkspaceContext';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const { isProcessing } = useWorkspace();
   const navItems = [
     { to: '/', label: 'Overview', icon: 'dashboard' },
     { to: '/library', label: 'Research Library', icon: 'folder_open' },
@@ -36,7 +38,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className="p-gutter-md flex flex-col gap-gutter-lg overflow-y-auto">
           {/* Brand & Collapse */}
           <div className="flex items-center justify-between px-1 pt-1">
-            <Link to="/" className="flex items-center gap-gutter-sm group">
+            <Link
+              to="/"
+              onClick={(e) => {
+                if (isProcessing) {
+                  e.preventDefault();
+                  return;
+                }
+              }}
+              className={`flex items-center gap-gutter-sm group ${
+                isProcessing ? 'pointer-events-none opacity-60 cursor-not-allowed' : ''
+              }`}
+            >
               <span className="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-105">
                 <span className="material-symbols-outlined text-[18px]" aria-hidden="true">science</span>
               </span>
@@ -47,8 +60,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <button
               type="button"
               aria-label="Close sidebar"
+              disabled={isProcessing}
               onClick={onClose}
-              className="lg:hidden p-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
+              className="lg:hidden p-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
@@ -57,7 +71,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {/* Workspace Switcher */}
           <button
             type="button"
-            className="w-full flex items-center justify-between px-3 py-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded transition-colors duration-state-change text-left group"
+            disabled={isProcessing}
+            className="w-full flex items-center justify-between px-3 py-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded transition-colors duration-state-change text-left group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <div className="flex flex-col min-w-0">
               <span className="font-label text-label-lg text-on-surface truncate group-hover:text-primary transition-colors">
@@ -79,9 +94,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 key={item.to}
                 to={item.to}
                 end={item.to === '/'}
-                onClick={onClose}
+                onClick={(e) => {
+                  if (isProcessing) {
+                    e.preventDefault();
+                    return;
+                  }
+                  onClose();
+                }}
                 className={({ isActive }) =>
                   `flex items-center gap-gutter-sm px-3 py-2 rounded font-label text-label-lg transition-colors duration-state-change ${
+                    isProcessing ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''
+                  } ${
                     isActive
                       ? 'bg-primary-container text-primary font-semibold'
                       : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'

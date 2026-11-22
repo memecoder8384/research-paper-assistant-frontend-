@@ -4,13 +4,15 @@ import { ResearchGap, ThematicCoverage } from '../types';
 import { getResearchGaps } from '../services/api';
 
 export const GapAnalyzerPage: React.FC = () => {
-  const { papers, showToast } = useWorkspace();
+  const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
   const [gaps, setGaps] = useState<ResearchGap[]>([]);
   const [thematic, setThematic] = useState<ThematicCoverage[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [filterTag, setFilterTag] = useState<string>('All');
   const [showCorpusEditor, setShowCorpusEditor] = useState(false);
   const [selectedCorpusIds, setSelectedCorpusIds] = useState<string[]>([]);
+
+  const busy = isAnalyzing || isProcessing;
 
   useEffect(() => {
     if (papers.length > 0) {
@@ -30,7 +32,9 @@ export const GapAnalyzerPage: React.FC = () => {
   }, [selectedCorpusIds]);
 
   const handleAnalyze = () => {
+    if (busy) return;
     setIsAnalyzing(true);
+    setIsProcessing(true);
     showToast('Synthesizing cross-paper corpus for underexplored gaps...', 'info');
     getResearchGaps(selectedCorpusIds)
       .then(data => {
@@ -43,6 +47,7 @@ export const GapAnalyzerPage: React.FC = () => {
       })
       .finally(() => {
         setIsAnalyzing(false);
+        setIsProcessing(false);
       });
   };
 
@@ -63,13 +68,13 @@ export const GapAnalyzerPage: React.FC = () => {
         <button
           type="button"
           onClick={handleAnalyze}
-          disabled={isAnalyzing}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs"
+          disabled={busy}
+          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className={`material-symbols-outlined text-[18px] ${isAnalyzing ? 'animate-spin' : ''}`} aria-hidden="true">
-            {isAnalyzing ? 'sync' : 'troubleshoot'}
+          <span className={`material-symbols-outlined text-[18px] ${busy ? 'animate-spin' : ''}`} aria-hidden="true">
+            {busy ? 'sync' : 'troubleshoot'}
           </span>
-          <span>{isAnalyzing ? 'Analyzing Corpus...' : 'Analyze Research Gaps'}</span>
+          <span>{busy ? 'Analyzing Corpus...' : 'Analyze Research Gaps'}</span>
         </button>
       </section>
 
@@ -90,8 +95,9 @@ export const GapAnalyzerPage: React.FC = () => {
         </div>
         <button
           type="button"
+          disabled={busy}
           onClick={() => setShowCorpusEditor(!showCorpusEditor)}
-          className="inline-flex items-center gap-gutter-xs px-3 py-1.5 rounded border border-outline-variant hover:bg-surface-container-low font-label text-label-md text-on-surface shrink-0 transition-colors"
+          className="inline-flex items-center gap-gutter-xs px-3 py-1.5 rounded border border-outline-variant hover:bg-surface-container-low font-label text-label-md text-on-surface shrink-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[16px]" aria-hidden="true">tune</span>
           <span>Edit Selection</span>
@@ -106,9 +112,10 @@ export const GapAnalyzerPage: React.FC = () => {
             {papers.map(p => {
               const isChecked = selectedCorpusIds.includes(p.id);
               return (
-                <label key={p.id} className="flex items-center gap-2 p-2 rounded bg-surface-container-low/50 cursor-pointer text-xs">
+                <label key={p.id} className={`flex items-center gap-2 p-2 rounded bg-surface-container-low/50 cursor-pointer text-xs ${busy ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}>
                   <input
                     type="checkbox"
+                    disabled={busy}
                     checked={isChecked}
                     onChange={() => {
                       if (isChecked) {
@@ -117,7 +124,7 @@ export const GapAnalyzerPage: React.FC = () => {
                         setSelectedCorpusIds(prev => [...prev, p.id]);
                       }
                     }}
-                    className="rounded text-primary focus:ring-primary"
+                    className="rounded text-primary focus:ring-primary disabled:opacity-50"
                   />
                   <span className="truncate text-on-surface font-body">{p.title}</span>
                 </label>
@@ -126,8 +133,9 @@ export const GapAnalyzerPage: React.FC = () => {
           </div>
           <div className="flex justify-end">
             <button
+              disabled={busy}
               onClick={() => setShowCorpusEditor(false)}
-              className="px-3 py-1 bg-primary text-on-primary rounded text-xs font-label"
+              className="px-3 py-1 bg-primary text-on-primary rounded text-xs font-label disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Done
             </button>
@@ -202,8 +210,9 @@ export const GapAnalyzerPage: React.FC = () => {
             {['All', 'Underexplored Topic', 'Contradictory Findings', 'Methodological Limitation', 'Cross-Lingual Gap'].map(tag => (
               <button
                 key={tag}
+                disabled={busy}
                 onClick={() => setFilterTag(tag)}
-                className={`px-2.5 py-0.5 rounded-full text-xs font-label transition-colors ${
+                className={`px-2.5 py-0.5 rounded-full text-xs font-label transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   filterTag === tag
                     ? 'bg-primary-container text-primary font-semibold'
                     : 'bg-surface border border-outline-variant text-on-surface-variant hover:text-on-surface'

@@ -4,13 +4,15 @@ import { ComparisonData } from '../types';
 import { getComparisonData } from '../services/api';
 
 export const ComparisonPage: React.FC = () => {
-  const { papers, showToast } = useWorkspace();
+  const { papers, showToast, isProcessing, setIsProcessing } = useWorkspace();
   const [paperAId, setPaperAId] = useState<string>('');
   const [paperBId, setPaperBId] = useState<string>('');
   const [paperCId, setPaperCId] = useState<string | null>(null);
   const [comparison, setComparison] = useState<ComparisonData | null>(null);
   const [isComparing, setIsComparing] = useState(false);
   const [selectingSlot, setSelectingSlot] = useState<'A' | 'B' | 'C' | null>(null);
+
+  const busy = isComparing || isProcessing;
 
   useEffect(() => {
     if (papers.length >= 2) {
@@ -36,7 +38,9 @@ export const ComparisonPage: React.FC = () => {
   }, [paperAId, paperBId]);
 
   const handleRunComparison = () => {
+    if (busy) return;
     setIsComparing(true);
+    setIsProcessing(true);
     showToast('Calculating comparison matrix across papers...', 'info');
     getComparisonData(paperAId, paperBId)
       .then(data => {
@@ -48,6 +52,7 @@ export const ComparisonPage: React.FC = () => {
       })
       .finally(() => {
         setIsComparing(false);
+        setIsProcessing(false);
       });
   };
 
@@ -75,13 +80,13 @@ export const ComparisonPage: React.FC = () => {
         <button
           type="button"
           onClick={handleRunComparison}
-          disabled={isComparing}
-          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs"
+          disabled={busy}
+          className="inline-flex items-center justify-center gap-gutter-sm px-gutter-md py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded font-label text-label-lg transition-colors duration-state-change shrink-0 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className={`material-symbols-outlined text-[18px] ${isComparing ? 'animate-spin' : ''}`} aria-hidden="true">
-            {isComparing ? 'sync' : 'compare_arrows'}
+          <span className={`material-symbols-outlined text-[18px] ${busy ? 'animate-spin' : ''}`} aria-hidden="true">
+            {busy ? 'sync' : 'compare_arrows'}
           </span>
-          <span>{isComparing ? 'Comparing...' : 'Compare Papers'}</span>
+          <span>{busy ? 'Comparing...' : 'Compare Papers'}</span>
         </button>
       </section>
 
@@ -95,8 +100,9 @@ export const ComparisonPage: React.FC = () => {
             </span>
             <button
               type="button"
+              disabled={busy}
               onClick={() => setSelectingSlot('A')}
-              className="text-xs text-primary hover:underline font-label flex items-center gap-1"
+              className="text-xs text-primary hover:underline font-label flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined text-[14px]">swap_horiz</span> Change
             </button>
@@ -117,8 +123,9 @@ export const ComparisonPage: React.FC = () => {
             </span>
             <button
               type="button"
+              disabled={busy}
               onClick={() => setSelectingSlot('B')}
-              className="text-xs text-primary hover:underline font-label flex items-center gap-1"
+              className="text-xs text-primary hover:underline font-label flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined text-[14px]">swap_horiz</span> Change
             </button>
@@ -140,9 +147,10 @@ export const ComparisonPage: React.FC = () => {
               </span>
               <button
                 type="button"
+                disabled={busy}
                 aria-label="Remove Paper C"
                 onClick={() => setPaperCId(null)}
-                className="text-on-surface-variant hover:text-on-surface"
+                className="text-on-surface-variant hover:text-on-surface disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="material-symbols-outlined text-[18px]" aria-hidden="true">close</span>
               </button>
@@ -157,8 +165,9 @@ export const ComparisonPage: React.FC = () => {
         ) : (
           <button
             type="button"
+            disabled={busy}
             onClick={() => setSelectingSlot('C')}
-            className="border-2 border-dashed border-outline hover:border-primary rounded-md p-gutter-md flex flex-col items-center justify-center gap-gutter-xs text-on-surface-variant hover:text-primary transition-colors duration-state-change min-h-[112px] group"
+            className="border-2 border-dashed border-outline hover:border-primary rounded-md p-gutter-md flex flex-col items-center justify-center gap-gutter-xs text-on-surface-variant hover:text-primary transition-colors duration-state-change min-h-[112px] group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-[22px] group-hover:scale-110 transition-transform" aria-hidden="true">
               add_circle
@@ -171,11 +180,11 @@ export const ComparisonPage: React.FC = () => {
       {/* Paper Slot Selector Modal */}
       {selectingSlot && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-xs" onClick={() => setSelectingSlot(null)} />
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-xs" onClick={() => !busy && setSelectingSlot(null)} />
           <div className="relative w-full max-w-md bg-surface border border-outline-variant rounded-xl shadow-2xl p-4 z-10 flex flex-col gap-3">
             <div className="flex items-center justify-between border-b border-outline-variant pb-2">
               <span className="font-headline text-headline-sm text-on-surface">Select Paper for Slot {selectingSlot}</span>
-              <button onClick={() => setSelectingSlot(null)} className="p-1 text-on-surface-variant hover:text-on-surface">
+              <button disabled={busy} onClick={() => setSelectingSlot(null)} className="p-1 text-on-surface-variant hover:text-on-surface disabled:opacity-50">
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </div>
@@ -183,8 +192,9 @@ export const ComparisonPage: React.FC = () => {
               {papers.map(p => (
                 <button
                   key={p.id}
+                  disabled={busy}
                   onClick={() => handleSelectPaperForSlot(p.id)}
-                  className="p-2 rounded text-left hover:bg-surface-container-low transition-colors flex flex-col gap-0.5"
+                  className="p-2 rounded text-left hover:bg-surface-container-low transition-colors flex flex-col gap-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="font-title text-title-md text-on-surface truncate">{p.title}</span>
                   <span className="text-xs text-on-surface-variant">{p.authors} · {p.year}</span>
