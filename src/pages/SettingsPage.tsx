@@ -89,7 +89,7 @@ export const SettingsPage: React.FC = () => {
               type="text"
               value={apiUrl}
               onChange={e => setApiUrl(e.target.value)}
-              placeholder="http://localhost:8000/api"
+              placeholder="http://localhost:8000"
               className="flex-1 px-3 py-2 bg-background border border-outline-variant rounded font-mono text-mono-sm text-on-surface focus:border-primary focus:outline-none"
             />
             <button

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWorkspace } from '../context/WorkspaceContext';
 
 export const DashboardPage: React.FC = () => {
-  const { papers, stats, setIsUploadModalOpen } = useWorkspace();
+  const { papers, stats, setIsUploadModalOpen, backendConnected } = useWorkspace();
   const navigate = useNavigate();
 
   const recentPapers = papers.slice(0, 4);
@@ -17,8 +17,8 @@ export const DashboardPage: React.FC = () => {
             <h1 className="font-headline text-headline-lg text-on-surface">Good morning, Dr. Vance</h1>
             {/* System Status Indicator */}
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface border border-outline-variant font-label text-label-sm text-on-surface-variant" role="status">
-              <span className="inline-block w-2 h-2 rounded-full bg-success" aria-hidden="true"></span>
-              <span>Connected</span>
+              <span className={`inline-block w-2 h-2 rounded-full ${backendConnected ? 'bg-success' : 'bg-primary'}`} aria-hidden="true"></span>
+              <span>{backendConnected ? 'Backend Live' : 'Frontend Standalone'}</span>
             </span>
           </div>
           <p className="font-body text-body-lg text-on-surface-variant">

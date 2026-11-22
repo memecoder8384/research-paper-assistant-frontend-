@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ResearchPaper, WorkspaceStats } from '../types';
 import { INITIAL_PAPERS, MOCK_WORKSPACE_STATS } from '../services/mockData';
-import { getPapers } from '../services/api';
+import { getPapers, deletePaperApi, testBackendConnection, API_CONFIG } from '../services/api';
 
 interface ToastInfo {
   id: string;
@@ -48,10 +48,16 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [backendConnected, setBackendConnected] = useState(false);
 
   useEffect(() => {
-    getPapers().then(data => {
-      if (data && data.length) {
-        setPapers(data);
+    testBackendConnection().then(res => {
+      setBackendConnected(res.success);
+      if (res.success) {
+        API_CONFIG.useMockApi = false;
       }
+      getPapers().then(data => {
+        if (data && data.length) {
+          setPapers(data);
+        }
+      });
     });
   }, []);
 
@@ -108,6 +114,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   const deletePaper = (paperId: string) => {
+    deletePaperApi(paperId).catch(err => console.error(err));
     setPapers(prev => prev.filter(p => p.id !== paperId));
     setSelectedPapersForChat(prev => prev.filter(id => id !== paperId));
     showToast('Paper removed from workspace.', 'info');

@@ -20,14 +20,18 @@ export const ComparisonPage: React.FC = () => {
 
   const handleRunComparison = () => {
     setIsComparing(true);
-    showToast('Recalculating comparison matrix across corpus...', 'info');
-    setTimeout(() => {
-      getComparisonData(paperAId, paperBId).then(data => {
+    showToast('Calculating comparison matrix across papers...', 'info');
+    getComparisonData(paperAId, paperBId)
+      .then(data => {
         setComparison(data);
-        setIsComparing(false);
         showToast('Comparison matrix updated!', 'success');
+      })
+      .catch(() => {
+        showToast('Comparison failed.', 'error');
+      })
+      .finally(() => {
+        setIsComparing(false);
       });
-    }, 900);
   };
 
   const paperA = papers.find(p => p.id === paperAId) || papers[1];

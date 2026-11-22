@@ -17,14 +17,18 @@ export const SummarizerPage: React.FC = () => {
 
   const handleGenerate = () => {
     setIsGenerating(true);
-    showToast('Synthesizing 8-part academic brief...', 'info');
-    setTimeout(() => {
-      getPaperSummary(selectedPaperId).then(data => {
+    showToast('Synthesizing academic brief...', 'info');
+    getPaperSummary(selectedPaperId)
+      .then(data => {
         setSummary(data);
-        setIsGenerating(false);
         showToast('Summary generated successfully!', 'success');
+      })
+      .catch(() => {
+        showToast('Failed to generate summary.', 'error');
+      })
+      .finally(() => {
+        setIsGenerating(false);
       });
-    }, 1200);
   };
 
   const handleCopySummary = () => {

@@ -27,14 +27,18 @@ export const GapAnalyzerPage: React.FC = () => {
   const handleAnalyze = () => {
     setIsAnalyzing(true);
     showToast('Synthesizing cross-paper corpus for underexplored gaps...', 'info');
-    setTimeout(() => {
-      getResearchGaps().then(data => {
+    getResearchGaps(selectedCorpusIds)
+      .then(data => {
         setGaps(data.gaps);
         setThematic(data.thematic);
+        showToast('Gap analysis complete!', 'success');
+      })
+      .catch(() => {
+        showToast('Gap analysis failed.', 'error');
+      })
+      .finally(() => {
         setIsAnalyzing(false);
-        showToast('Gap analysis complete! 4 high-value opportunities identified.', 'success');
       });
-    }, 1200);
   };
 
   const filteredGaps = filterTag === 'All' ? gaps : gaps.filter(g => g.tag === filterTag);
