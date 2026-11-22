@@ -9,7 +9,15 @@ export const ChatPage: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPaperPicker, setShowPaperPicker] = useState(false);
+  const [expandedCitations, setExpandedCitations] = useState<Record<string, boolean>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const toggleCitations = (messageId: string) => {
+    setExpandedCitations(prev => ({
+      ...prev,
+      [messageId]: !prev[messageId],
+    }));
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -245,27 +253,50 @@ export const ChatPage: React.FC = () => {
                     })}
                   </div>
 
-                  {/* Embedded Citation Cards */}
+                  {/* Collapsible Citations Section */}
                   {msg.citations && msg.citations.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-gutter-sm pt-gutter-sm border-t border-outline-variant">
-                      {msg.citations.map(citation => (
-                        <div
-                          key={citation.id}
-                          className="bg-background border border-outline-variant rounded p-3 flex flex-col gap-gutter-xs hover:border-primary/40 transition-colors"
-                        >
-                          <div className="flex items-center justify-between gap-gutter-xs">
-                            <span className="font-label text-label-md text-primary truncate">
-                              {citation.authorsYear}
-                            </span>
-                            <span className="px-2 py-0.5 rounded bg-primary-container text-primary font-mono text-mono-sm shrink-0">
-                              {citation.page}
-                            </span>
-                          </div>
-                          <p className="font-body text-body-sm text-on-surface-variant text-pretty italic">
-                            {citation.quote}
-                          </p>
+                    <div className="pt-2 border-t border-outline-variant/60 flex flex-col gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => toggleCitations(msg.id)}
+                        className="inline-flex items-center gap-1.5 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-fit px-2.5 py-1.5 rounded bg-surface-container-low hover:bg-surface-container border border-outline-variant cursor-pointer group"
+                      >
+                        <span className="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary transition-transform duration-200">
+                          {expandedCitations[msg.id] ? 'expand_less' : 'expand_more'}
+                        </span>
+                        <span>
+                          {expandedCitations[msg.id]
+                            ? `Hide ${msg.citations.length} citation${msg.citations.length > 1 ? 's' : ''}`
+                            : `View ${msg.citations.length} citation${msg.citations.length > 1 ? 's' : ''}`}
+                        </span>
+                      </button>
+
+                      {/* Expanded Citation Cards (Hidden by default) */}
+                      {expandedCitations[msg.id] && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 animate-in fade-in duration-200">
+                          {msg.citations.map(citation => (
+                            <div
+                              key={citation.id}
+                              className="bg-background border border-outline-variant rounded-md p-3 flex flex-col gap-1.5 hover:border-primary/40 transition-colors overflow-hidden min-w-0 shadow-2xs"
+                            >
+                              <div className="flex items-center justify-between gap-2 min-w-0">
+                                <span
+                                  className="font-label text-label-sm text-primary truncate max-w-[180px] break-all"
+                                  title={citation.paperTitle || citation.authorsYear}
+                                >
+                                  {(citation.paperTitle || citation.authorsYear || 'Document').replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ')}
+                                </span>
+                                <span className="px-2 py-0.5 rounded bg-primary-container text-primary font-mono text-mono-xs shrink-0 font-medium">
+                                  {citation.page}
+                                </span>
+                              </div>
+                              <p className="font-body text-xs text-on-surface-variant italic break-words break-all line-clamp-3 leading-relaxed">
+                                "{citation.quote.replace(/^Passage from\s+[\w\.-]+\s*/i, 'Excerpt: ')}"
+                              </p>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
                 </article>

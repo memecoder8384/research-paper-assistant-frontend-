@@ -162,7 +162,7 @@ export async function sendChatMessage(
           paperTitle: s.paperTitle || s.filename,
           authorsYear: s.authorsYear || s.filename,
           page: s.page || `p. ${s.page_number || s.start_page}`,
-          quote: s.quote || `Passage from ${s.filename || 'paper'} (p. ${s.page_number || s.start_page})`,
+          quote: s.quote || `Passage excerpt from page ${s.page_number || s.start_page}`,
         }));
         return {
           id: data.id || `msg-${Date.now()}`,
